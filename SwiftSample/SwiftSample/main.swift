@@ -108,3 +108,63 @@ extension User: CustomStringConvertible {
     return result
   }
 }
+
+// -----------------------------------
+extension User {
+  var displayName: String? {
+    guard let name = name, let address = address else {
+      return nil
+    }
+
+    return "\(name)(\(address))"
+  }
+
+  #if false
+  var displayName: String? {
+    if let name = name, let address = address {
+      return "\(name)(\(address))"
+    }
+
+    return nil
+  }
+  #endif
+}
+
+func createWelcomeMessage(name: String) -> String {
+  return "Welcome, \(name)"
+}
+
+if let displayName = user.displayName {
+  let result = createWelcomeMessage(name: displayName)
+  print(result)
+} else {
+  let result = createWelcomeMessage(name: "Guest")
+  print(result)
+}
+
+// 위의 코드는 nil 병합 연산자를 이용해서 간결하게 표현할 수 있습니다.
+//  - nil 일 때의 기본값을 지정하기 위해 사용한다.
+let displayName = user.displayName ?? "Guest"
+let result = createWelcomeMessage(name: "Guest")
+print(result)
+
+extension User {
+  var displayName2: String {
+    // name, address           => name(address)
+    // name(nil), address      => address
+    // name, address(nil)      => name
+    // name(nil), address(nil) => "Guest"
+
+    // Wildcard Pattern
+    switch (name, address) {
+    case let (name?, address?):
+      return "\(name)(\(address))"
+    case let (nil, address?):
+      return address
+    case let (name?, nil):
+      return name
+    case (nil, nil):
+      return "Guest"
+    }
+  }
+}
