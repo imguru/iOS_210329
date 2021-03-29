@@ -73,8 +73,10 @@ enum UserPreference: RawRepresentable {
   case enabled
   case disabled
   case notSet
-  
-  init?(rawValue: Bool?) {
+
+  // init? -> UserPreference?
+  // init  -> UserPreference
+  init(rawValue: Bool?) {
     switch rawValue {
     case true?:
       self = .enabled
@@ -95,4 +97,14 @@ enum UserPreference: RawRepresentable {
       return nil
     }
   }
+}
+
+let faceIdPref = UserPreference(rawValue: preference["faceIdEnabled"])
+switch faceIdPref {
+case .enabled:
+  print("Enabled")
+case .disabled:
+  print("Disabled")
+case .notSet:
+  print("Not set")
 }
