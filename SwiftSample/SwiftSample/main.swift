@@ -79,3 +79,16 @@ func logMessage(message: Message) {
 logMessage(message: joinMessage)
 logMessage(message: textMessage)
 logMessage(message: leaveMessage)
+
+// 단일 항목에 대한 처리만 하고 싶다.
+if case .text(userId: let userId, contents: let contents, date: let date) = textMessage {
+  print("Text - \(userId) / \(contents) / \(date)")
+}
+
+if case .join(let userId, let date) = joinMessage {
+  print("Join - \(userId) / \(date)")
+}
+
+if case let .leave(userId, date) = leaveMessage {
+  print("Leave - \(userId) / \(date)")
+}
