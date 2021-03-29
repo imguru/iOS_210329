@@ -52,7 +52,7 @@ struct Image {
     // lazy var - mutating method
     print("Draw image - \(image)")
   }
-  
+
   init(url: String) {
     self.url = url
   }
@@ -63,10 +63,13 @@ struct Image {
 // 2) struct의 경우 저장형 프로퍼티에 대해서 자동으로 초기화 메소드를 만들어 줍니다.
 //    하지만 lazy var는 저장형 프로퍼티이기 때문에 외부에서 초기화될 경우 의도한 동작이 수행되지 않을 수 있습니다.
 //    => 사용자 정의 초기화 메소드를 정의하는 것이 좋습니다.
+// 3) 세터를 통해 image가 외부에서 변경될 경우, 초기화 블록이 제대로 수행되지 않습니다.
+//    => 외부에서 수정할 수 없는 형태로 만드는 것이 좋습니다.
 
-// var image = Image(url: "https://a.com/b.png")
-// image.draw()
-// image.draw()
+var image = Image(url: "https://a.com/b.png")
+// image.image = UIImage(url: "https://a.com/a.png")
+image.draw()
+image.draw()
 
 // var image = Image(url: "https://a.com/b.png", image: UIImage(url: "https://a.com/a.png"))
 // image.draw()
