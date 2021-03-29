@@ -19,31 +19,31 @@ struct User {
   var email: String {
     didSet {
       print("didSet - \(oldValue)")
-      
+
       // didSet / willSet이 호출되지 않습니다.
       email = email.lowercased().trimmingCharacters(in: .whitespaces)
-    
+
       // if oldValue.hasPrefix("hello") {
       //  email = oldValue
       // }
     }
-    
+
     willSet {
       print("willSet - \(newValue)")
     }
   }
-  
+
   init(email: String) {
     print("init begin")
     self.email = email
-    
+
     // defer: 함수가 종료된 후에 호출되는 블록을 지정합니다.
     //        함수의 마지막에 수행되어야 하는 정리코드는 캡슐화하는 목적으로 사용합니다.
     defer {
       print("defer()")
       self.email = email
     }
-    
+
     print("init end")
   }
 }
