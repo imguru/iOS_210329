@@ -54,9 +54,29 @@ enum ImageType: String {
 }
 
 func getAvatarImageFilename(for fileExtension: String) -> String? {
+  guard let imageType = ImageType(rawValue: fileExtension) else {
+    return nil
+  }
+
+  return "avatar.\(imageType.rawValue)"
+
+  #if false
   if let imageType = ImageType(rawValue: fileExtension) {
     return "avatar.\(imageType.rawValue)"
   } else {
     return nil
   }
+  #endif
+}
+
+if let result = getAvatarImageFilename(for: "jpg") {
+  print(result)
+}
+
+if let result = getAvatarImageFilename(for: "jpeg") {
+  print(result)
+}
+
+if let result = getAvatarImageFilename(for: "JPG") {
+  print(result)
 }
