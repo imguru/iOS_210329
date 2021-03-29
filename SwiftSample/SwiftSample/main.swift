@@ -142,10 +142,22 @@ class Database {
 }
 
 class UserManager {
-  // var database: Database?
+  #if true
+  var database: Database!
   //  : 초기화가 반드시 보장되는 작업에 대해서만 사용하는 것이 안전합니다.
+  
+  func status() -> String {
+    // Optional<Bool>?
+    if database.isConnected {
+      return "OK"
+    } else {
+      return "Database is down"
+    }
+  }
+  #endif
+  
+  #if false
   var database: Database?
-
   func status() -> String {
     // Optional<Bool>?
     if database?.isConnected ?? false {
@@ -154,4 +166,10 @@ class UserManager {
       return "Database is down"
     }
   }
+  #endif
 }
+
+let manager = UserManager()
+manager.database = Database()
+
+print(manager.status())
