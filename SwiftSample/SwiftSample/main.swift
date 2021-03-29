@@ -21,11 +21,11 @@ struct User {
       print("didSet - \(oldValue)")
       
       // didSet / willSet이 호출되지 않습니다.
-      // email = email.lowercased().trimmingCharacters(in: .whitespaces)
+      email = email.lowercased().trimmingCharacters(in: .whitespaces)
     
-      if oldValue.hasPrefix("hello") {
-        email = oldValue
-      }
+      // if oldValue.hasPrefix("hello") {
+      //  email = oldValue
+      // }
     }
     
     willSet {
@@ -34,11 +34,22 @@ struct User {
   }
   
   init(email: String) {
+    print("init begin")
     self.email = email
+    
+    // defer: 함수가 종료된 후에 호출되는 블록을 지정합니다.
+    //        함수의 마지막에 수행되어야 하는 정리코드는 캡슐화하는 목적으로 사용합니다.
+    defer {
+      print("defer()")
+      self.email = email
+    }
+    
+    print("init end")
   }
 }
 
-var user = User(email: "hello@gmail.com")
+// 주의사항: 초기화메소드를 통해서 설정된 값에 대해서는 didSet / willSet이 동작하지 않습니다.
+var user = User(email: "     hello@gmail.com     ")
 
-user.email = "   world@gmail.com    "
+// user.email = "   world@gmail.com    "
 print(user.email)
