@@ -1,9 +1,10 @@
 
 import Foundation
 
+#if false
 func getAvatarImageFilename(for fileExtension: String) -> String? {
-  switch fileExtension {
-  case "jpg":
+  switch fileExtension.lowercased() {
+  case "jpg", "jpeg":
     return "avatar.jpg"
   case "bmp":
     return "avatar.bmp"
@@ -19,4 +20,17 @@ func getAvatarImageFilename(for fileExtension: String) -> String? {
 if let result = getAvatarImageFilename(for: "jpg") {
   print(result)
 }
+
+if let result = getAvatarImageFilename(for: "jpeg") {
+  print(result)
+}
+
+if let result = getAvatarImageFilename(for: "JPG") {
+  print(result)
+}
+#endif
+
+// enum - rawValue
+//   - Int, Double, Float, String
+
 
