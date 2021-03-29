@@ -185,5 +185,12 @@ let omarket4 = OnlineCarMarket(names: [
   "Sonata", "K5",
 ])
 
+// 정적 팩토리 메소드(static factory method)
+// 1. 가독성
+//   - 객체 생성에 대한 방법을 다양한 이름을 통해 제공할 수 있습니다.
+// 2. 객체 생성의 정책을 유연하게 변경할 수 있습니다.
 let market = CarMarket.create(cars: [])
 let omarket = OnlineCarMarket.create(cars: [])
+
+dump(market)
+dump(omarket)
