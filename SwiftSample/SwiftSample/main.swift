@@ -206,11 +206,31 @@ struct Guest {
   var exp: Int
 }
 
+#if false
 enum Account {
   case user(User)
   case admin(Admin)
   case guest(Guest)
   
+  func display() {
+    switch self {
+    case let .user(user):
+      print("User display - \(user)")
+    case let .admin(admin):
+      print("Admin display - \(admin)")
+    case let .guest(guest):
+      print("Guest display - \(guest)")
+    }
+  }
+}
+#endif
+enum Account {
+  case user(User)
+  case admin(Admin)
+  case guest(Guest)
+}
+
+extension Account {
   func display() {
     switch self {
     case let .user(user):
