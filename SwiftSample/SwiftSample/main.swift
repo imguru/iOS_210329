@@ -1,6 +1,7 @@
 import Foundation
 
 // static vs class
+// => class 키워드를 통해 오버라이딩 가능한 정적 메소드 / 정적 프로퍼티를 제공할 수 있습니다.
 #if false
 class Car {
   // static func foo() {
@@ -19,7 +20,7 @@ class Truck: Car {
 
   // 자식 클래스가 동일한 이름의 static method를 제공하는 것이 불가능합니다.
   // static func foo() {
-  // print("Truck foo")
+  //   print("Truck foo")
   // }
 }
 
@@ -30,6 +31,8 @@ Truck.foo()
 
 // self: class의 인스턴스의 self
 // Self: class의 Self
+//      => 자기 자신의 동적 클래스
+//         타입에 대한 정보를 실행시간에 동적으로 접근할 수 있다.
 
 class Car {
   class var name: String {
