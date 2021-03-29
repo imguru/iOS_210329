@@ -60,6 +60,13 @@ if preference["isFaceIdEnabled"] ?? true {
   print("페이스아이디비활성화")
 }
 
+//--------
+let ob: Bool? = nil
+if ob ?? false {
+  print("true")
+} else {
+  print("false")
+}
 
 
 
