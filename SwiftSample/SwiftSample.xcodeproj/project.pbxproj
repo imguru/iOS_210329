@@ -6,10 +6,6 @@
 	objectVersion = 50;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		7A5184F126119944007CB908 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A5184EC261194EE007CB908 /* main.swift */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXCopyFilesBuildPhase section */
 		7A5184B826114DC0007CB908 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -32,7 +28,7 @@
 		7A5184DC26117042007CB908 /* 4_enum4.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = 4_enum4.swift; sourceTree = "<group>"; };
 		7A5184E126117793007CB908 /* 5_프로퍼티.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "5_프로퍼티.swift"; sourceTree = "<group>"; };
 		7A5184E826118FDB007CB908 /* 5_프로퍼티2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "5_프로퍼티2.swift"; sourceTree = "<group>"; };
-		7A5184EC261194EE007CB908 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		7A5184EC261194EE007CB908 /* 5_프로퍼티3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "5_프로퍼티3.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,7 +69,7 @@
 				7A5184DC26117042007CB908 /* 4_enum4.swift */,
 				7A5184E126117793007CB908 /* 5_프로퍼티.swift */,
 				7A5184E826118FDB007CB908 /* 5_프로퍼티2.swift */,
-				7A5184EC261194EE007CB908 /* main.swift */,
+				7A5184EC261194EE007CB908 /* 5_프로퍼티3.swift */,
 			);
 			path = SwiftSample;
 			sourceTree = "<group>";
@@ -136,7 +132,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A5184F126119944007CB908 /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
