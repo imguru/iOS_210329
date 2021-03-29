@@ -47,8 +47,7 @@ class Truck: Car {
 //  }
 }
 
-class Sedan: Car {
-}
+class Sedan: Car {}
 
 print(Truck.name)
 print(Sedan.name)
@@ -63,7 +62,7 @@ enum Color: CaseIterable {
 struct Car {
   let name: String
   let color: Color
-  
+
   init(name: String) {
     self.name = name
     self.color = Color.allCases.randomElement()!
@@ -81,7 +80,7 @@ struct Car {
   let name: String
   let color: Color
 }
- 
+
 extension Car {
   init(name: String) {
     self.name = name
@@ -91,8 +90,71 @@ extension Car {
 
 let car1 = Car(name: "Sonata", color: .white)
 let car2 = Car(name: "K5")
+// print(car1)
+// print(car2)
 
-print(car1)
-print(car2)
+// 4. class 타입은 초기화 메소드를 반드시 제공해야 합니다.
+//   => 저장 프로퍼티에 대한 초기화가 반드시 필요합니다.
+class CarMarket {
+  let cars: [Car]
+  let capacity: Int
 
+  // 5. 모든 프로퍼티를 온전하게 초기화하는 초기화메소드를 '지정 초기화 메소드'라고 합니다.
+  //    파라미터의 기본 값을 지정하면, 불필요한 오버로딩을 방지할 수 있습니다.
+  init(cars: [Car], capacity: Int = 100) {
+    self.cars = cars
+    self.capacity = capacity
+  }
 
+  // 6. 다른 종류의 초기값을 통해 초기화가 필요한 경우, 초기화 메소드를 오버로딩 하면 됩니다.
+  convenience init(names: [String]) {
+    var cars = [Car]()
+    for name in names {
+      cars.append(Car(name: name))
+    }
+
+    // self.cars = cars
+    // self.capacity = 100
+
+    // 직접 초기화 하는 것이 아니라, 기존의 초기화 메소드를 통해 초기화를 수행할 경우,
+    // convenience 키워드를 지정해야 합니다.
+    //  => 편의 초기화 메소드(편의 생성자)
+    self.init(cars: cars)
+  }
+}
+
+let market1 = CarMarket(cars: [], capacity: 100)
+let market2 = CarMarket(cars: [])
+let market3 = CarMarket(names: [
+  "Sonata", "K5",
+])
+
+class OnlineCarMarket: CarMarket {
+  let url: String
+
+  init(cars: [Car], capacity: Int, url: String) {
+    self.url = url
+
+    super.init(cars: cars, capacity: capacity)
+  }
+
+  // 8. 부모가 제공하는 초기화 메소드를 이용하고 싶다면,
+  //    부모의 지정 초기화 메소드를 오버라이딩 해야 합니다.
+  override convenience init(cars: [Car], capacity: Int = 100) {
+    self.init(cars: cars, capacity: capacity, url: "https://a.com/cars")
+  }
+}
+
+// 7.
+// 자식 클래스가 초기화 메소드를 제공하고 있지 않은 경우
+// => 부모의 초기화 메소드와, 편의 초기화 메소드를 상속 받습니다.
+
+// 자식 클래스가 직접 초기화 메소드를 제공하면, 부모의 초기화 메소드와 편의 초기화 메소드를 사용할 수 없습니다.
+
+let omarket1 = OnlineCarMarket(cars: [], capacity: 100, url: "https://a.com/cars")
+
+let omarket2 = OnlineCarMarket(cars: [])
+let omarket3 = OnlineCarMarket(cars: [], capacity: 100)
+let omarket4 = OnlineCarMarket(names: [
+  "Sonata", "K5",
+])
