@@ -28,14 +28,22 @@ struct Image {
 
   // 시간이 오래 걸리는 작업은 계산형 프로퍼티는 적합하지 않습니다.
   // => 지연 초기화(lazy initialization)
-  lazy var image: UIImage = loadImageFromUrl()
+  lazy var image: UIImage = {
+    print("Download image from \(url)")
+    sleep(1)
+
+    return UIImage(url: url)
+  }()
   
+  #if false
+  lazy var image: UIImage = loadImageFromUrl()
   private func loadImageFromUrl() -> UIImage {
     print("Download image from \(url)")
     sleep(1)
 
     return UIImage(url: url)
   }
+  #endif
   
   mutating func draw() {
     // lazy var - mutating method
