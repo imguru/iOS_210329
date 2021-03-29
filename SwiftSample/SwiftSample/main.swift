@@ -9,10 +9,10 @@ struct User {
   let name: String? // Optional<String>
   // let name: Optional<String>
 
-  let address: String? = "Suwon"
+  let address: String?
 }
 
-let user = User(id: 0, email: "hello@gmail.com", name: "Tom")
+let user = User(id: 0, email: "hello@gmail.com", name: "Tom", address: nil)
 
 // 1) enum을 통해서 Optional이 구현되어 있습니다.
 /*
@@ -168,3 +168,6 @@ extension User {
     }
   }
 }
+
+let user2 = User(id: 0, email: "hello@gmail.com", name: nil, address: nil)
+print(user2.displayName2)
