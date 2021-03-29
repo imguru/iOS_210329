@@ -86,7 +86,7 @@ enum UserPreference: RawRepresentable {
       self = .notSet
     }
   }
-  
+
   var rawValue: Bool? {
     switch self {
     case .enabled:
@@ -107,4 +107,51 @@ case .disabled:
   print("Disabled")
 case .notSet:
   print("Not set")
+}
+
+// -------------------------
+// Implicitly unwrapping Optional
+
+// Optional
+//  - Int?  : Explicitly unwrapping Optional  => Optional<Int>
+//  - Int!  : Implicitly unwrapping Optional  => Optional<Int>
+
+#if false
+let a: Int? = nil
+// print(a)
+if let a = a {
+  print(a.distance(to: 10))
+}
+
+let b: Int! = nil
+// print(b)
+if let b = b {
+  print(b.distance(to: 10))
+}
+
+func foo(_ a: Int) {
+  print(a)
+}
+
+// Int? -> Int 대입은 불가능합니다.
+foo(b)
+#endif
+
+class Database {
+  var isConnected: Bool = false
+}
+
+class UserManager {
+  // var database: Database?
+  //  : 초기화가 반드시 보장되는 작업에 대해서만 사용하는 것이 안전합니다.
+  var database: Database?
+
+  func status() -> String {
+    // Optional<Bool>?
+    if database?.isConnected ?? false {
+      return "OK"
+    } else {
+      return "Database is down"
+    }
+  }
 }
