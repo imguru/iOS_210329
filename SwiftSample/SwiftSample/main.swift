@@ -1,90 +1,85 @@
-
 import Foundation
 
-// Any: 모든 객체 타입을 참조할 수 있는 타입입니다.
-//  1) is - 타입 체크
-//  2) as - 타입 변환
-
-enum DataType {
-  case date(Date)
-  case string(String)
-  case int(Int)
-  case double(Double)
-
-  // 새로운 항목이 추가되면, 컴파일러가 오류를 통해 처리해야 하는 부분을 알려줍니다.
-  case intRange(Range<Int>)
-  // 1...10: ClosedRange
-  // 0..<10: Range
-
-  case dateRange(Range<Date>)
-}
-
-let startDate = Date()
-let endDate = Date().addingTimeInterval(10)
-
-let arr: [DataType] = [
-  .date(Date()),
-  .string("Hello"),
-  .int(42),
-  .double(3.14),
-  .intRange(1 ..< 10),
-  .dateRange(startDate ..< endDate)
-]
-
-for element in arr {
-  switch element {
-  case let .date(date):
-    print(date)
-  case let .string(string):
-    print(string)
-  case let .int(int):
-    print(int)
-  case let .double(double):
-    print(double)
-  case let .intRange(range):
-    for e in range {
-      print(e)
-    }
-  case let .dateRange(range):
-    print(range)
-  }
-}
-
+// 중복된 속성이 존재합니다.
+// => 객체 지향 설계에서는 중복된 속성을 부모 클래스를 통해 캡슐화가 가능합니다.
+// => 스위프트에서 상속을 사용하기 위해서는 구조체가 아닌 클래스를 이용해야 합니다.
 #if false
-let arr: [Any] = [
-  Date(),
-  "Hello",
-  100,
-  3.14,
-]
+struct User {
+  let email: String
+  let password: String
+  let joinDate: Date
+  
+  var level: Int
+  var exp: Int
+}
 
-for element in arr {
-  switch element {
-  case let v as Date:
-    print("Date - \(v)")
-  case let v as String:
-    print("String - \(v)")
-  case let v as Int:
-    print("Int - \(v)")
-  case let v as Double:
-    print("Double - \(v)")
-  default:
-    print("Unsupported Type")
-  }
-
-  #if false
-  switch element {
-  case is Date:
-    print("Date")
-  case is String:
-    print("String")
-  case is Int:
-    print("Int")
-  case is Double:
-    print("Double")
-  default:
-    print("Unsupported Type!")
-  }
-  #endif
+struct Admin {
+  let email: String
+  let password: String
+  let joinDate: Date
+  
+  var logs: [String]
 }
 #endif
+
+// 클래스
+// - 구조체와 다르게 멤버 초기화 메소드가 자동으로 제공되지 않습니다.
+// - 사용자는 프로퍼티의 초기값을 지정하거나, 초기화 메소드를 통해 초기화를 수행해주어야 합니다.
+
+class Account {
+  let email: String
+  let password: String
+  let joinDate: Date
+  
+  init(email: String, password: String, joinDate: Date) {
+    self.email = email
+    self.password = password
+    self.joinDate = joinDate
+  }
+  
+  func display() {
+    print("Account display")
+  }
+}
+
+class User: Account {
+  var level: Int
+  var exp: Int
+  
+  // 자신의 속성을 먼저 초기화 하고, 부모의 지정 초기화 메소드를 통해 초기화를 수행해야 합니다.
+  init(email: String, password: String, joinDate: Date, level: Int, exp: Int) {
+    self.level = level
+    self.exp = exp
+    
+    super.init(email: email, password: password, joinDate: joinDate)
+  }
+  
+  override func display() {
+    print("User display")
+  }
+}
+
+class Admin: Account {
+  var logs: [String]
+  
+  init(email: String, password: String, joinDate: Date, logs: [String]) {
+    self.logs = logs
+    
+    super.init(email: email, password: password, joinDate: joinDate)
+  }
+  
+  override func display() {
+    print("Admin display")
+  }
+}
+
+let arr: [Account] = [
+  User(email: "hello@gmail.com", password: "linux123", joinDate: Date(), level: 1, exp: 1000),
+  Admin(email: "ok@gmail.com", password: "linux123", joinDate: Date(), logs: [])
+]
+
+// 상속을 이용해서 구현하는 다형성
+for e in arr {
+  e.display()
+}
+
