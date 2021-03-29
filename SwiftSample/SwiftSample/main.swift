@@ -54,3 +54,13 @@ struct Timer {
 }
 
 // let timer = Timer(id: 1, startTime: Date(), endTime: nil) - error!
+// let timer = Timer(id: 1, startTime: Date())
+var timer = Timer(id: 1, startTime: Date())
+print(timer.elapsedTime())
+sleep(2)
+print(timer.elapsedTime())
+timer.setFinished()
+print(timer.isFinished())
+
+
+
