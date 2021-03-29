@@ -5,11 +5,57 @@ import Foundation
 //  1) is - 타입 체크
 //  2) as - 타입 변환
 
+enum DataType {
+  case date(Date)
+  case string(String)
+  case int(Int)
+  case double(Double)
+
+  // 새로운 항목이 추가되면, 컴파일러가 오류를 통해 처리해야 하는 부분을 알려줍니다.
+  case intRange(Range<Int>)
+  // 1...10: ClosedRange
+  // 0..<10: Range
+
+  case dateRange(Range<Date>)
+}
+
+let startDate = Date()
+let endDate = Date().addingTimeInterval(10)
+
+let arr: [DataType] = [
+  .date(Date()),
+  .string("Hello"),
+  .int(42),
+  .double(3.14),
+  .intRange(1 ..< 10),
+  .dateRange(startDate ..< endDate)
+]
+
+for element in arr {
+  switch element {
+  case let .date(date):
+    print(date)
+  case let .string(string):
+    print(string)
+  case let .int(int):
+    print(int)
+  case let .double(double):
+    print(double)
+  case let .intRange(range):
+    for e in range {
+      print(e)
+    }
+  case let .dateRange(range):
+    print(range)
+  }
+}
+
+#if false
 let arr: [Any] = [
   Date(),
   "Hello",
   100,
-  3.14
+  3.14,
 ]
 
 for element in arr {
@@ -25,8 +71,7 @@ for element in arr {
   default:
     print("Unsupported Type")
   }
-  
-  
+
   #if false
   switch element {
   case is Date:
@@ -42,3 +87,4 @@ for element in arr {
   }
   #endif
 }
+#endif
