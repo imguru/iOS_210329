@@ -6,6 +6,8 @@ import Foundation
 //   var - getter / setter
 //  1) Stored Property - 저장형 프로퍼티
 //  2) Computed Property - 계산형 프로퍼티
+//    => 프로퍼티를 가장한 메소드 입니다.
+//       간단한 메소드를 계산형 프로퍼티로 사용하면, 코드의 가독성에 도움이 됩니다.
 
 // class Timer {} - reference type
 //  let t1 = Timer()
@@ -20,7 +22,7 @@ import Foundation
 //    let/var
 //    [  t1   ]
 
-
+#if false
 struct Timer {
   let id: Int
   let startTime: Date
@@ -61,6 +63,53 @@ sleep(2)
 print(timer.elapsedTime())
 timer.setFinished()
 print(timer.isFinished())
+#endif
 
 
+struct Timer {
+  let id: Int
+  let startTime: Date
+  var endTime: Date?
+  
+  // Computed Property - var
+  #if false
+  var elapsedTime: TimeInterval {
+    get {
+      return Date().timeIntervalSince(startTime)
+    }
+  }
+  #endif
+  // Getter 만 제공하는 경우에는 좀더 간단하게 표현할 수 있습니다.
+  var elapsedTime: TimeInterval {
+      return Date().timeIntervalSince(startTime)
+  }
+  
+  var isFinished: Bool {
+    get {
+      return endTime != nil
+    }
+    
+    // timer.isFinished = true
+    set {
+      // newValue: 사용자가 전달한 값
+      if newValue {
+        endTime = Date()
+      } else {
+        endTime = nil
+      }
+    }
+  }
+  
+  init(id: Int, startTime: Date) {
+    self.id = id
+    self.startTime = startTime
+  }
+}
 
+var timer = Timer(id: 1, startTime: Date())
+print(timer.elapsedTime)
+sleep(2)
+print(timer.elapsedTime)
+
+timer.isFinished = true
+print(timer.isFinished)
