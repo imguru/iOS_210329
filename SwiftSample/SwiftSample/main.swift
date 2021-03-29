@@ -90,6 +90,11 @@ struct Timer {
     }
     
     // timer.isFinished = true
+    // let timer = Timer(...)
+    // timer.isFinished = true  // compile error!
+    
+    // var timer = Timer()
+    // timer.isFinished = true  // compile ok!
     set {
       // newValue: 사용자가 전달한 값
       if newValue {
@@ -111,5 +116,16 @@ print(timer.elapsedTime)
 sleep(2)
 print(timer.elapsedTime)
 
-timer.isFinished = true
+timer.isFinished = true // 구조체의 경우 var 에서만 수행 가능합니다.
 print(timer.isFinished)
+
+//--------
+class User {
+  var name: String = "Tom"
+  var age: Int = 42
+}
+
+// var user = User()
+let user = User()
+user.age = 100
+user.name = "Bob"
