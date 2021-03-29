@@ -60,7 +60,7 @@ if preference["isFaceIdEnabled"] ?? true {
   print("페이스아이디비활성화")
 }
 
-//--------
+// --------
 let ob: Bool? = nil
 if ob ?? false {
   print("true")
@@ -68,5 +68,31 @@ if ob ?? false {
   print("false")
 }
 
-
-
+// ----------------
+enum UserPreference: RawRepresentable {
+  case enabled
+  case disabled
+  case notSet
+  
+  init?(rawValue: Bool?) {
+    switch rawValue {
+    case true?:
+      self = .enabled
+    case false?:
+      self = .disabled
+    case nil:
+      self = .notSet
+    }
+  }
+  
+  var rawValue: Bool? {
+    switch self {
+    case .enabled:
+      return true
+    case .disabled:
+      return false
+    case .notSet:
+      return nil
+    }
+  }
+}
