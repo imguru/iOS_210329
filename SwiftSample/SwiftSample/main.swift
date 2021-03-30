@@ -20,6 +20,16 @@ struct Location {
 }
 
 // 3. 스위프트에서 함수(메소드)가 오류를 던질 경우, throws 키워드를 지정해야 합니다.
+//  => 어떤 종류의 오류를 던지는지 알 수 없다.
+//   해결방법: 문서화를 활용해야 합니다.
+//           Command + Option + /
+
+/// 문자열로 되어 있는 위도와 경도를 Location 구조체로 만듭니다.
+/// - Parameters:
+///   - latitude: 위도 문자열
+///   - longitude: 경도 문자열
+/// - Throws: 문자열을 Double로 변경이 불가능할 경우, ParseLocationError 오류가 발생합니다.
+/// - Returns: Location 구조체
 func parseLocation(_ latitude: String, _ longitude: String) throws -> Location {
   guard let latitude = Double(latitude),
         let longitude = Double(longitude)
