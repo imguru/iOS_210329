@@ -50,3 +50,23 @@ let arr2 = ["hello", "abcd", "world"]
 if let result = lowest(arr2) {
   print(result)
 }
+
+struct User {
+  let age: Int
+}
+
+let arr3 = [
+  User(age: 30),
+  User(age: 10),
+  User(age: 20),
+]
+
+extension User: Comparable {
+  static func <(lhs: User, rhs: User) -> Bool {
+    return lhs.age > rhs.age
+  }
+}
+
+if let result = lowest(arr3) {
+  print(result)
+}
