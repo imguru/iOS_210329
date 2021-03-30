@@ -209,15 +209,40 @@ protocol UserType {
   func display()
 }
 
-// final class: 상속 금지 클래스
-final class User: UserType {
+struct Person: UserType {
+  // 구조체는 상속이 불가능하기 때문에 required 키워드를 사용하지 않습니다.
   init(address: String) {
+  }
+  
+  var name: String = "Tom"
+  
+  func display() {
+  }
+}
+
+// final class: 상속 금지 클래스
+//  => 상속 계층의 마지막 클래스
+//     컴파일러의 최적화에 도움을 준다.
+//     : https://developer.apple.com/swift/blog/?id=27
+//      => final, private
+final class User: UserType {
+  required init(address: String) {
     
   }
   
 // class User: User Type {
 //     required init(address: String) {
 //     }
+  
+  // overriding 금지된 메소드
+  final func foo() {
+  }
+  
+  // overriding 금지된 프로퍼티
+  final var a: String = ""
+  
+  private func goo() {
+  }
   
   
   // var name: String = "Tom"
