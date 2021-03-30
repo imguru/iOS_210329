@@ -1,3 +1,4 @@
+
 import Foundation
 
 enum ApiError: Error {
@@ -11,36 +12,50 @@ struct User {
   let company: String
 }
 
+extension ApiError {
+  var nsError: NSError {
+    return NSError(apiError: self)
+  }
+}
+
+
 func getGithubUser(login: String) throws -> User {
   if login == "root" {
+    // throw ApiError.client("Invalid login name")
+    // throw NSError(domain: "MyDomain", code: 100, userInfo: ["hello":"Tom"])
+    
+    // throw NSError(apiError: ApiError.client("Invalid login name"))
     throw ApiError.client("Invalid login name").nsError
   }
 
   return User(login: login, company: "LG")
 }
 
+// 현재 버전
+//   - Error가 NSError 타입이어야 한다.
 do {
   let user = try getGithubUser(login: "root")
   print(user)
 } catch {
-  // print(error)
-  ErrorHandler.default.handle(error)
+  // NSError: Obj-C에서 다루는 Error 타입
+  //  => NSError 가 출력되는 형식을 변경해야 합니다.
+  print(error)
 }
 
-// 오류 처리를 중앙 집중적으로 관리하면, 오류 처리의 중복된 코드를 한곳에 모아서 관리할 수 있습니다.
-// Singleton
-//   - `default`
-//
-struct ErrorHandler {
-  static let `default` = ErrorHandler()
-  
-  func handle(_ error: Error) {
-    print(error)
-  }
+// 예전 버전
+#if false
+do {
+  let user = try getGithubUser(login: "root")
+  print(user)
+} catch let error as NSError {
+  print(error)
 }
+#endif
 
+/// A localized message describing what error occurred.
+// var errorDescription: String? { get }
 
-
+// 1. 오류를 출력할 때 추가적인 정보를 제공할 수 있습니다.
 extension ApiError: LocalizedError {
   var errorDescription: String? {
     switch self {
@@ -69,6 +84,7 @@ extension ApiError: LocalizedError {
   }
 }
 
+// 2. NSError가 출력되는 형식을 지정할 수 있습니다.
 extension ApiError: CustomNSError {
   static var errorDomain: String {
     return "ApiError"
@@ -98,11 +114,5 @@ extension ApiError: CustomNSError {
 extension NSError {
   convenience init(apiError: ApiError) {
     self.init(domain: ApiError.errorDomain, code: apiError.errorCode, userInfo: apiError.errorUserInfo)
-  }
-}
-
-extension ApiError {
-  var nsError: NSError {
-    return NSError(apiError: self)
   }
 }
