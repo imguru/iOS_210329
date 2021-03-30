@@ -51,7 +51,6 @@ do {
   print(location)
 } catch {
   print(error)
-  
   // 5. catch 블록으로 전달되는 error는 Error의 최상위 타입입니다.
   switch error {
   case ParseLocationError.invalidData:
@@ -79,3 +78,24 @@ do {
   print("Unknown error")
 }
 
+func handleError(error: ParseLocationError) {
+  switch error {
+  case ParseLocationError.invalidData:
+    print("handleError: invalidData")
+  case ParseLocationError.network(let message):
+    print("handleError: network - \(message)")
+  case ParseLocationError.locationDoesNotExist:
+    print("handleError: locationDoesNotExit")
+  }
+}
+
+// 7. 에러의 타입을 기반으로 다른 처리를 하는 것도 가능합니다.
+do {
+  let location = try parseLocation("3.14x", "4.5")
+  print(location)
+} catch let error as ParseLocationError {
+  print("사용자 정의 오류 - \(error)")
+  handleError(error: error)
+} catch {
+  print("Unknown error")
+}
