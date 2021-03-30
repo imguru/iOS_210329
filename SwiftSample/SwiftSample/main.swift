@@ -31,6 +31,8 @@ func getGithubUser(login: String) throws -> User {
   return User(login: login, company: "LG")
 }
 
+// 현재 버전
+//   - Error가 NSError 타입이어야 한다.
 do {
   let user = try getGithubUser(login: "root")
   print(user)
@@ -39,6 +41,16 @@ do {
   //  => NSError 가 출력되는 형식을 변경해야 합니다.
   print(error)
 }
+
+// 예전 버전
+#if false
+do {
+  let user = try getGithubUser(login: "root")
+  print(user)
+} catch let error as NSError {
+  print(error)
+}
+#endif
 
 /// A localized message describing what error occurred.
 // var errorDescription: String? { get }
