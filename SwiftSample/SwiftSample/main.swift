@@ -102,7 +102,7 @@ class CarMarket {
   // 5. 모든 프로퍼티를 온전하게 초기화하는 초기화메소드를 '지정 초기화 메소드'라고 합니다.
   //    파라미터의 기본 값을 지정하면, 불필요한 오버로딩을 방지할 수 있습니다.
   // init(cars: [Car], capacity: Int = 100) {
-  
+
   required init(cars: [Car], capacity: Int = 100) {
     self.cars = cars
     self.capacity = capacity
@@ -123,7 +123,7 @@ class CarMarket {
     //  => 편의 초기화 메소드(편의 생성자)
     self.init(cars: cars)
   }
-  
+
   // 9.
   // 정적 팩토리 메소드 - static factory method
   // - 문제점: 자식 클래스도 반드시 아래의 create 함수를 제공해야 합니다.
@@ -132,7 +132,7 @@ class CarMarket {
     return CarMarket(cars: cars)
   }
   #endif
-  
+
   // 아래의 함수가 모든 자식 클래스에서 제대로 동작하기 위해서는
   // 정적 팩토리 메소드 안에서 호출하는 초기화 메소드가 모든 자식 클래스에서 반드시 구현되어야 한다.
   // => 스위프트에서는 자식 클래스 반드시 제공해야 하는 초기화 메소드에 대해서 required 를 지정하면 됩니다.
@@ -151,8 +151,7 @@ class OnlineCarMarket: CarMarket {
 //  override class func create(cars: [Car]) -> OnlineCarMarket {
 //    return OnlineCarMarket(cars: cars)
 //  }
-  
-  
+
   let url: String
 
   init(cars: [Car], capacity: Int, url: String) {
@@ -164,7 +163,7 @@ class OnlineCarMarket: CarMarket {
   // 8. 부모가 제공하는 초기화 메소드를 이용하고 싶다면,
   //    부모의 지정 초기화 메소드를 오버라이딩 해야 합니다.
   // override convenience init(cars: [Car], capacity: Int = 100) {
-  
+
   // 부모의 required 초기화 메소드는 override가 아닌 required 이어야 한다.
   required convenience init(cars: [Car], capacity: Int = 100) {
     self.init(cars: cars, capacity: capacity, url: "https://a.com/cars")
@@ -192,5 +191,41 @@ let omarket4 = OnlineCarMarket(names: [
 let market = CarMarket.create(cars: [])
 let omarket = OnlineCarMarket.create(cars: [])
 
-dump(market)
-dump(omarket)
+// dump(market)
+// dump(omarket)
+
+// required
+// 1) 클래스 팩토리 메소드(= 정적 팩토리 메소드)
+//   => 클래스 팩토리 내부에서 호출되는 초기화 메소드
+// 2) 프로토콜
+//   => 상속 가능한 클래스에서 초기화메소드를 제공할 경우, 반드시 required를 통해 제공해야 합니다.
+//   => 상속 불가능한 final 클래스에서는 required 키워드를 생략할 수 있습니다.
+
+protocol UserType {
+  var name: String { get set }
+  
+  init(address: String)
+  
+  func display()
+}
+
+// final class: 상속 금지 클래스
+final class User: UserType {
+  init(address: String) {
+    
+  }
+  
+  // var name: String = "Tom"
+  var name: String {
+    get {
+      return "Tom"
+    }
+    set {
+      
+    }
+  }
+  
+  func display() {
+    print("User display")
+  }
+}
