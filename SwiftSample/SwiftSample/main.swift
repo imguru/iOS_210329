@@ -101,6 +101,7 @@ extension SendJob: Job {
 // PAT 기반의 프로토콜을 사용하면, 런타임 다형성을 위한 코드를 사용할 수 없습니다.
 // => 반드시 컴파일 타임 다형성을 통해 코드를 작성해야 합니다.
 //  Protocol 'Job' can only be used as a generic constraint
+// --------
 #if false
 let jobs: [Job] = [
   MailJob(),
@@ -127,7 +128,21 @@ let emails = [
 runJob(job: MailJob(), inputs: emails)
 runJob(job: SendJob.sms(phone: "000-111-2222"), inputs: emails)
 
-let dirs = [
-  URL(fileURLWithPath: "/Users/ourguide/Desktop/aaa") // 주의! 진짜 지워집니다.
+let dirs: [URL] = [
+  // URL(fileURLWithPath: "/Users/ourguide/Desktop/aaa") // 주의! 진짜 지워집니다.
 ]
 runJob(job: DirRemover(), inputs: dirs)
+
+// Protocol 'Equatable' can only be used as a generic constraint
+//  => Equatable(PAT)
+//     1) associatedtype
+//     2) Self
+
+func areAllEquals<T: Equatable>(value: T, values: [T]) -> Bool {
+  for e in values {
+    if e != value {
+      return false
+    }
+  }
+  return true
+}
