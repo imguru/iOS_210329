@@ -34,7 +34,8 @@ func parseLocation(_ latitude: String, _ longitude: String) throws -> Location {
   guard let latitude = Double(latitude),
         let longitude = Double(longitude)
   else {
-    throw ParseLocationError.invalidData
+    // throw ParseLocationError.invalidData
+    throw ParseLocationError.network("Host is down")
   }
 
   return Location(latitude: latitude, longitude: longitude)
@@ -50,4 +51,17 @@ do {
   print(location)
 } catch {
   print(error)
+  
+  // catch 블록으로 전달되는 error는 Error의 최상위 타입입니다.
+  switch error {
+  case ParseLocationError.invalidData:
+    print("invalidData")
+  case ParseLocationError.network(let message):
+    print("network - \(message)")
+  case ParseLocationError.locationDoesNotExist:
+    print("locationDoesNotExit")
+  default:
+    print("Unknown error")
+  }
+  
 }
