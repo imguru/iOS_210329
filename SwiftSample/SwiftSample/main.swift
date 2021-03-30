@@ -72,8 +72,8 @@ let arr = [
 printValues(arr)
 
 struct User {
-  let name: String
-  let age: Int
+  let name: String // Hashable / Equtable
+  let age: Int     // Hashable / Equtable
 }
 
 extension User : Comparable {
@@ -88,17 +88,19 @@ extension User : Comparable {
 
 // => Swift는 Hashbale에서 Equtable을 상속하는 형태로 구현되어 있습니다.
 
+// Swift의 구조체의 프로퍼티가 Hashable / Equtable에 대한 프로토콜을 만족한다면,
+// 별도의 구현을 제공할 필요가 없습니다.
 extension User : Hashable {
-  // Equtable
-  static func == (lhs: User, rhs: User) -> Bool {
-    return lhs.name == rhs.name && lhs.age == rhs.age
-  }
-  
-  // Hashable
-  func hash(into hasher: inout Hasher) {
-    hasher.combine(name)
-    hasher.combine(age)
-  }
+//  // Equtable
+//  static func == (lhs: User, rhs: User) -> Bool {
+//    return lhs.name == rhs.name && lhs.age == rhs.age
+//  }
+//  
+//  // Hashable
+//  func hash(into hasher: inout Hasher) {
+//    hasher.combine(name)
+//    hasher.combine(age)
+//  }
 }
 
 let arr2 = [
@@ -113,3 +115,9 @@ let arr2 = [
 ]
 printValues(arr2)
 
+#if false
+let numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+for number in numbers where number % 2 == 0 {
+    print(number)
+}
+#endif
