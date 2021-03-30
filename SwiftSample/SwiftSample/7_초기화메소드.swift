@@ -244,7 +244,6 @@ final class User: UserType {
   private func goo() {
   }
   
-  
   // var name: String = "Tom"
   var name: String {
     get {
