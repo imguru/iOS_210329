@@ -39,4 +39,25 @@ protocol Job {
   func start(input: Input) -> Output
 }
 
+class MailJob: Job {
+  // typealias Input = String
+  // typealias Output = Bool
+  
+  @discardableResult
+  func start(input: String) -> Bool {
+    print("MailJob start: \(input)")
+    return true
+  }
+}
 
+let job = MailJob()
+job.start(input: "hello@gmail.com")
+
+class DirRemover : Job {
+  typealias Input = URL
+  typealias Output = [String]
+  
+  func start(input: URL) -> [String] {
+      return []
+  }
+}
