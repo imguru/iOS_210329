@@ -39,3 +39,15 @@ func parseLocation(_ latitude: String, _ longitude: String) throws -> Location {
 
   return Location(latitude: latitude, longitude: longitude)
 }
+
+// 4. throws 지정된 함수(메소드)를 호출하는 방법
+//   try fn() : 예외를 외부로 전파한다.
+//              전파되는 예외가 처리되지 않는다면, 프로그램은 비정상 종료한다.
+//   do {} catch {}: 예외를 처리할 수 있습니다.
+
+do {
+  let location = try parseLocation("3.14x", "4.5")
+  print(location)
+} catch {
+  print(error)
+}
