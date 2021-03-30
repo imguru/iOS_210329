@@ -3,7 +3,8 @@ import Foundation
 // Protocol
 //  => Protocol Oriented Programming(POP)
 //  1) 런타임 프로토콜: 인터페이스 기반 프로그래밍
-//  2)
+//  2) 컴파일타임 프로토콜: 제네릭을 이용한 컴파일 타임에 코드를 생성하는 기술
+//    => 프로토콜은 구체적인 타입으로 결정될 수 없습니다.
 
 protocol Country {
   var name: String { get }
@@ -125,15 +126,20 @@ extension Korea {
 }
 
 // country: Country
-processCountry(country: Korea()) { country in
+processCountry(country: Korea()) { (country: Country) in
   if let korea = country as? Korea {
     korea.hangul()
   }
 }
 
-// country: Korea
-processCountryGeneric(country: Korea()) { country in
+// 제네릭 버전은 구체적인 타입으로 결정된다.
+// country: T -> Korea
+processCountryGeneric(country: Korea()) { (country: Korea) in
   country.hangul()
 }
+
+// 정리
+// - 런타임 프로토콜은 프로토콜을 만족하는 다양한 타입을 한번에 관리하는 것이 가능하다.
+// - 컴파일타임 프로토콜은 구체적인 타입에 대한 기능을 별도의 캐스팅없이 사용 가능하다.
 
 
