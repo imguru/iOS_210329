@@ -99,3 +99,39 @@ do {
 } catch {
   print("Unknown error")
 }
+
+class Resource {
+  init() {
+    print("Resource 생성")
+  }
+  func close() {
+    print("Resource 파괴")
+  }
+}
+
+// 8. finally: 예외가 발생하든 발생하지 않든 반드시 수행되는 블록을 지정한다.
+//    => 자원 해지
+//    스위프트는 finally가 제공되지 않습니다.
+//    => defer를 이용해서, finally의 역활을 대체합니다.
+
+func foo() {
+  let resource = Resource()
+  defer {
+    resource.close()
+  }
+  
+  do {
+    let location = try parseLocation("3.14", "4.5")
+    print(location)
+    // resource.close()
+  } catch let error as ParseLocationError {
+    print("사용자 정의 오류 - \(error)")
+    handleError(error: error)
+    // resource.close()
+  } catch {
+    print("Unknown error")
+    // resource.close()
+  }
+}
+
+foo()
