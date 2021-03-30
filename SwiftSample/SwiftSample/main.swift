@@ -20,8 +20,6 @@ struct America: Country {
   var exchangeRate: Float = 1
 }
 
-
-
 #if false
 class World {
   var countries: [Country]
@@ -58,15 +56,15 @@ print(type(of: world.countries))
 //   => 결국 코드를 생성하기 때문에, C의 타입이 하나의 구체적인 타입으로 결정된다.
 class World<C: Country> {
   var countries: [C]
-  
+
   init(countries: [C]) {
     self.countries = countries
   }
-  
+
   func addCountry(_ country: C) {
     countries.append(country)
   }
-  
+
   func process() {
     for country in countries {
       print("\(country.name) - \(country.exchangeRate)")
@@ -98,9 +96,6 @@ let world2 = World(countries: countries2) // C -> Korea
 world2.process()
 print(type(of: world2))
 print(type(of: world2.countries))
-
-
-
 
 #if false
 let countries: [Country] = [
