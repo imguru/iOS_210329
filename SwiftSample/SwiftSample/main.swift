@@ -215,6 +215,11 @@ final class User: UserType {
     
   }
   
+// class User: User Type {
+//     required init(address: String) {
+//     }
+  
+  
   // var name: String = "Tom"
   var name: String {
     get {
