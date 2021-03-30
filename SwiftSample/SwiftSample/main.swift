@@ -7,7 +7,7 @@ import Foundation
 func lowest(_ array: [Int]) -> Int? {
   // 오름 차순 정렬
   let sorted = array.sorted()
-  
+
   // 정렬된 배열에서 첫번째 원소를 반환한다.
   return sorted.first
 }
@@ -17,7 +17,7 @@ func lowest(_ array: [Int]) -> Int? {
   return array.sorted().first
 }
 
-let arr = [ 10, 8, 5, 1, 2, 7 ]
+let arr = [10, 8, 5, 1, 2, 7]
 if let result = lowest(arr) {
   print(result)
 }
@@ -27,23 +27,26 @@ if let result = lowest(arr) {
 //   T 제약
 //    - sorted() : T를 비교할 수 있어야 한다.
 //      "Comparable 프로토콜을 만족해야 한다"
-//       T: Comparable
 
+//   제약 표현하는 방법
+//   1)  T: Comparable
+#if false
 func lowest<T: Comparable>(_ array: [T]) -> T? {
-   return array.sorted().first
+  return array.sorted().first
+}
+#endif
+
+//   2) where T: Comprable
+func lowest<T>(_ array: [T]) -> T? where T: Comparable {
+  return array.sorted().first
 }
 
-let arr = [ 10, 8, 5, 1, 2, 7 ]
+let arr = [10, 8, 5, 1, 2, 7]
 if let result = lowest(arr) {
   print(result)
 }
 
-let arr2 = [ "hello", "abcd", "world" ]
+let arr2 = ["hello", "abcd", "world"]
 if let result = lowest(arr2) {
   print(result)
 }
-
-
-
-
-
