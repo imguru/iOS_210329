@@ -137,7 +137,7 @@ runJob(job: DirRemover(), inputs: dirs)
 //  => Equatable(PAT)
 //     1) associatedtype
 //     2) Self
-
+#if false
 func areAllEquals<T: Equatable>(value: T, values: [T]) -> Bool {
   for e in values {
     if e != value {
@@ -146,3 +146,41 @@ func areAllEquals<T: Equatable>(value: T, values: [T]) -> Bool {
   }
   return true
 }
+#endif
+
+struct User {
+  let email: String
+  let sms: String
+}
+
+struct UserMailJob: Job {
+  typealias Input = User
+  typealias Output = Bool
+  
+  func start(input: User) -> Bool {
+    print("UserMailJob - \(input.email)")
+    return true
+  }
+}
+
+let users = [
+  User(email: "hello1@gmail.com", sms: ""),
+  User(email: "hello2@gmail.com", sms: ""),
+  User(email: "hello3@gmail.com", sms: ""),
+]
+runJob(job: UserMailJob(), inputs: users)
+
+
+// 만약 Input Type이 User인 경우, 로직이 다르다.
+//  => C++ 부분 전문화
+//  => where J.Input == User
+func runJob<J: Job>(job: J, inputs: [J.Input]) where J.Input == User {
+  for input in inputs {
+    print("User - \(input.email)")  // 컴파일러는 where 구문을 통해 J.Input이 User 타입임을 알 수 있습니다.
+    _ = job.start(input: input)
+  }
+}
+
+
+
+
