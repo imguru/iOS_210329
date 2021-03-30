@@ -165,6 +165,23 @@ class OnlineCarMarket: CarMarket {
   // override convenience init(cars: [Car], capacity: Int = 100) {
 
   // 부모의 required 초기화 메소드는 override가 아닌 required 이어야 한다.
+  #if false
+  override init(cars: [Car], capacity: Int = 100) {
+    self.url = "https://a.com/cars"
+    super.init(cars: car, capacity: capacity)
+  }
+  #endif
+  // 1) 위의 코드의 결과로 부모가 제공하는 초기화 메소드와 부모의 초기화 메소드를 호출하는 편의 초기화 메소드를 사용할 수 있습니다.
+  
+  #if false
+  override convenience init(cars: [Car], capacity: Int = 100) {
+    // self.url = "https://a.com/cars"
+    // super.ini(cars: car, capacity: capacity)
+    self.init(cars: cars, capacity: capacity, url: "https://a.com/cars")
+    // 자신의 지정 초기화 메소드를 호출하고 있으므로, convenience 가 필요합니다.
+  }
+  #endif
+  
   required convenience init(cars: [Car], capacity: Int = 100) {
     self.init(cars: cars, capacity: capacity, url: "https://a.com/cars")
   }
