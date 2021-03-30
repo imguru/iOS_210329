@@ -85,7 +85,7 @@ let countries = [
 
 // -> Array<Korea>
 let world = World(countries: countries) // C -> Korea
-world.process()
+// world.process()
 print(type(of: world))
 print(type(of: world.countries))
 
@@ -93,7 +93,7 @@ let countries2 = [
   America(),
 ]
 let world2 = World(countries: countries2) // C -> Korea
-world2.process()
+// world2.process()
 print(type(of: world2))
 print(type(of: world2.countries))
 
@@ -103,5 +103,37 @@ let countries: [Country] = [
   America(),
 ]
 let world = World(countries: countries)
-world.process()
+// world.process()
 #endif
+
+// Country - protocol
+func processCountry(country: Country, completion: ((Country) -> Void)? = nil) {
+  print("\(country.name), \(country.exchangeRate)")
+  completion?(country)
+}
+
+// Generic
+func processCountryGeneric<T: Country>(country: T, completion: ((T) -> Void)? = nil) {
+  print("\(country.name), \(country.exchangeRate)")
+  completion?(country)
+}
+
+extension Korea {
+  func hangul() {
+    print("한글")
+  }
+}
+
+// country: Country
+processCountry(country: Korea()) { country in
+  if let korea = country as? Korea {
+    korea.hangul()
+  }
+}
+
+// country: Korea
+processCountryGeneric(country: Korea()) { country in
+  country.hangul()
+}
+
+
