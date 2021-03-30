@@ -49,6 +49,15 @@ let a: Int? = 40
 struct Container<T> {}
 // let truck: Container<Car> = Container<Truck>()  // error!
 
+let arr: [Car] = [
+  Truck(),
+  Truck(),
+]
+let dic: [String: Any] = [
+  "name": "Tom",  // [String: String]
+  "age": 42,      // [String: Int]
+]
+
 
 
 
