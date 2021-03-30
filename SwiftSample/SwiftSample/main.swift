@@ -34,7 +34,7 @@ func getGithubUser(login: String) throws -> User {
 do {
   let user = try getGithubUser(login: "root")
   print(user)
-} catch let error as NSError {
+} catch {
   // NSError: Obj-C에서 다루는 Error 타입
   //  => NSError 가 출력되는 형식을 변경해야 합니다.
   print(error)
