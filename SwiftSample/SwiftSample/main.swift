@@ -101,3 +101,14 @@ func getJSON(with url: URL, completion: @escaping (Result<Data, NetworkError>) -
   // 별도의 스레드 풀에서 비동기적으로 수행됩니다.
   task.resume()
 }
+
+if let url = URL(string: url) {
+  getJSON(with: url) { result in
+    switch result {
+    case let .success(data):
+      print(data)
+    case let .failure(error):
+      print(error)
+    }
+  }
+}
