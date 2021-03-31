@@ -57,12 +57,17 @@ func searchUsers(q: String, completion: @escaping (Result<JSON, SearchResultErro
     return
   }
 
-  getJSON(with: url) { result in
-    let convertedResult = result // Result<Data, NetworkError>
+  getJSON(with: url) { (result: Result<Data, NetworkError>) in
+
+    // Result<Data, NetworkError> -> xxx -> Result<JSON, SearchResultError>
+    // completion(result)
+
+    let c: Result<JSON, SearchResultError> = result // Result<Data, NetworkError>
       .mapError { (error: NetworkError) -> SearchResultError in // Result<Data, SearchResultError>
         .networkError(error)
       }
       .flatMap { (data: Data) -> Result<JSON, SearchResultError> in
+
         if let json = try? JSONSerialization.jsonObject(with: data, options: []),
            let jsonDic = json as? JSON
         {
@@ -72,10 +77,10 @@ func searchUsers(q: String, completion: @escaping (Result<JSON, SearchResultErro
         }
       }
 
-    completion(convertedResult)
+    completion(c)
   }
 
-#if false
+  #if false
   getJSON(with: url) { result in
     switch result {
     // - Result<Data, NetworkError>  ->  flatMap  ->  Result<JSON, SearchResultError>
@@ -93,10 +98,10 @@ func searchUsers(q: String, completion: @escaping (Result<JSON, SearchResultErro
     // Result
     // - Result<Data, NetworkError>  ->  mapError  ->  Result<Data, SearchResultError>
     case let .failure(error):
-      completion(.failure(.networkError(error)))
+      completion(.failure(.networkError(error))) // Result<Data, SearchResultError>
     }
   }
-#endif
+  #endif
 }
 
 searchUsers(q: "apple") { result in
