@@ -1,129 +1,37 @@
 
 import Foundation
 
-//                  Sequence
-//                      |
-//                  Collection
-//                      |
-//   ----------------------------------------------------------------
-//   |                            |                                 |
-// MutableCollection       RangeReplicationCollection      BidirectionColleciton
-//                                                                  |
-//                                                         RandomAcesssCollection
+// Collection / Sequence
+//  - map
+//    : transform 으로도 부르는 언어가 있습니다.
 
-// 1) MutableCollection
-//   : 길이를 변경하지 않고 요소를 값을 변경할 수 있는 연산을 제공한다.
-//    - sort
-var arr = [ 1, 3, 5, 7, 9, 2, 4, 6, 8, 10 ]
-arr.sort()
-print(arr)
-
-let index = arr.partition { e -> Bool in
-  e % 2 == 0
+struct User {
+  let name: String
+  let commitCount: Int
 }
-// print(index)
-let result1 = arr[..<index]
-let result2 = arr[index...]
-
-print(result1)
-print(result2)
-
-// 2) RangeReplicationCollection
-//   => 길이를 변경할 수 있다.
-//     removeFirst / removeSubrange / removeAll
-//     +=
-
-arr += [ 1, 2, 3 ]
-print(arr)
-
-arr.removeAll { e -> Bool in
-  e % 2 == 0
-}
-print(arr)
-
-// 3) BidirectionColleciton
-//  - 양방향으로 이동할 수 있다.
-//  - 역방향 순회가 가능합니다.
-#if false
-var lastIndex = arr.endIndex
-while lastIndex > arr.startIndex {
-  lastIndex = arr.index(before: lastIndex)
-  print(arr[lastIndex])
-}
-#endif
-
-for value in arr.reversed() {
-  print(value)
-}
-
-// 4) RandomAccessCollection
-//   - BidirectionCollection을 상속하며, 성능적인 향상을 제공합니다.
-//     인덱스 기반 접근의 효율이 O(1) 입니다.
-let repeated = repeatElement("hello", count: 10)
-print(repeated[3])
-
-print(arr[5])
-
-
-
-//#if false
-//public protocol Collection: Sequence {
-//  associatedtype Element
-//  associatedtype Index
-//
-//  var startIndex: Self.Index { get }
-//  var endIndex: Self.Index { get } // 끝 다음 인덱스
-//
-//  subscript(position: Self.Index) -> Self.Element { get }
-//
-//  func index(after i: Int) -> Self.Index
-//}
-//#endif
-
-#if true
-struct Fruits {
-  let banana = "Banana"
-  let apple = "Apple"
-  let tomato = "Tomato"
-}
-
-extension Fruits: Collection {
-  typealias Element = String
-  typealias Index = Int
-
-  var startIndex: Int {
-    return 0
-  }
-
-  var endIndex: Int {
-    return 3
-  }
-
-  subscript(position: Int) -> String {
-    switch position {
-    case 0: return banana
-    case 1: return apple
-    case 2: return tomato
+func resolveCounts(stat: [User]) -> [String] {
+  var result = [String]()
+  for user in stat {
+    var message = ""
+    switch user.commitCount {
+    case 0:
+      message = "\(user.name): 아무것도 안함"
+    case 1 ..< 100:
+      message = "\(user.name): 열심히 안함"
     default:
-      fatalError("Out of index")
+      message = "\(user.name): 열심히 했음"
     }
+    
+    result.append(message)
   }
-
-  func index(after i: Int) -> Int {
-    return i + 1
-  }
+  return result
 }
 
-// Collection은 Sequence를 만족합니다.
-let fruits = Fruits()
-for e in fruits {
-  print(e)
-}
-let result = fruits.map { e in
-  e.uppercased()
-}
+let commitsPerUser: [User] = [
+  User(name: "Tom", commitCount: 30),
+  User(name: "Bob", commitCount: 150),
+  User(name: "Alice", commitCount: 0)
+]
+
+let result = resolveCounts(stat: commitsPerUser)
 print(result)
-
-let result2 = fruits.sorted()
-print(result2)
-#endif
