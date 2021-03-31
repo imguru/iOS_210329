@@ -30,7 +30,8 @@ do {
 // 오류 처리를 중앙 집중적으로 관리하면, 오류 처리의 중복된 코드를 한곳에 모아서 관리할 수 있습니다.
 // Singleton
 //   - `default`
-//
+//   - shared: 생성을 불가능하게 합니다.
+//             초기화 메소드를 private으로 두면 됩니다.
 struct ErrorHandler {
   static let `default` = ErrorHandler()
   

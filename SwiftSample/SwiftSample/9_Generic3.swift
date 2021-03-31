@@ -33,7 +33,7 @@ printValues(arr)
 //  2) where T: Comparable & Hashable
 #if false
 func printValues<T: Comparable & Hashable>(_ values: [T]) {
-  print(values.sorted()) // Comparable
+  print(values.sorted())  // Comparable
 
   var result = [T: Int]() // Hashable
   for e in values {

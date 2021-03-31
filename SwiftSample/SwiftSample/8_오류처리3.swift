@@ -18,7 +18,6 @@ extension ApiError {
   }
 }
 
-
 func getGithubUser(login: String) throws -> User {
   if login == "root" {
     // throw ApiError.client("Invalid login name")

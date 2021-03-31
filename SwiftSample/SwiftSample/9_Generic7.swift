@@ -54,6 +54,7 @@ struct ImageProcessor<J: Job> where J.Input == UIImage, J.Output == Bool {
 // struct ImageProcessor<J: Job> where J.Input == UIImage, J.Output == Bool {
 // 위의 제약이 반복적으로 필요하다면, 별도의 프로토콜을 통해 모듈화할 수 있다.
 protocol ImageJob: Job where Input == UIImage, Output == Bool {}
+
 struct ImageCropper: ImageJob {
   let size: CGSize
 
@@ -66,11 +67,6 @@ struct ImageCropper: ImageJob {
 struct ImageProcessor<J: ImageJob> {
   let job: J
 
-  // 아래 코드가 제대로 동작하기 위해서는
-  // J.Input = UIImage
-  // J.Output = Bool
-  // 위의 제약이 필요합니다.
-  // : where J.Input == UIImage, J.Output == Bool
   func start() {
     let image = UIImage()
     let result = job.start(input: image)
