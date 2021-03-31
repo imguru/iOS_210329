@@ -99,11 +99,11 @@ func counts(stat: [User]) -> [Int] {
 
 func counts(stat: [User]) -> [Int] {
   return stat
+    .filter { e in
+      e.commitCount > 0
+    }
     .map { e in
       e.commitCount
-    }
-    .filter { e in
-      e > 0
     }
     .sorted(by: <)
 }
