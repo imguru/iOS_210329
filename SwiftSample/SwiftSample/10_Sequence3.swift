@@ -2,45 +2,34 @@
 import Foundation
 
 // 아래의 컬렉션에서 반복자를 구현해봅시다.
-// 2. AnyIterator를 이용하는 방법
-#if false
-mutating func next() -> Element? {
-  guard let (key, value) = store.first else {
-    return nil
-  }
+// 1. 직접 반복자를 구현하는 방법
 
-  if value > 1 {
-    store[key]? -= 1
-  } else {
-    store[key] = nil
-  }
+struct BagIterator<Element: Hashable>: IteratorProtocol {
+  var store = [Element: Int]()
 
-  return key
+  mutating func next() -> Element? {
+    guard let (key, value) = store.first else {
+      return nil
+    }
+
+    if value > 1 {
+      store[key]? -= 1
+    } else {
+      store[key] = nil
+    }
+
+    return key
+  }
 }
-#endif
 
 extension Bag: Sequence {
-  func makeIterator() -> AnyIterator<Element> {
-    // init(store: ...)
-    var store = self.store
-    
-    // next() 로직을 클로저를 통해 전달합니다.
-    return AnyIterator {
-      guard let (key, value) = store.first else {
-        return nil
-      }
-
-      if value > 1 {
-        store[key]? -= 1
-      } else {
-        store[key] = nil
-      }
-
-      return key
-    }
+  func makeIterator() -> BagIterator<Element> {
+    return BagIterator(store: store)
   }
 }
 
+
+// 1. 요소의 빈도를 관리할 수 있는 Bag 구조체를 만들어봅시다.
 struct Bag<Element: Hashable> {
   // private var store: [Element: Int] = [:]
   private var store = [Element: Int]()
