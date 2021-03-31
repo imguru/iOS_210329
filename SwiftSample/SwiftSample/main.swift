@@ -25,7 +25,29 @@ func searchUsers(q: String, completion: @escaping (Result<JSON, SearchResultErro
   }
 
   getJSON(with: url) { result in
-    // ...
+    switch result {
+    case let .success(data):
+
+      if let json = try? JSONSerialization.jsonObject(with: data, options: []),
+         let jsonDic = json as? JSON
+      {
+        completion(.success(jsonDic))
+      } else {
+        completion(.failure(.invalidJSON))
+      }
+
+    case let .failure(error):
+      completion(.failure(.networkError(error)))
+    }
+  }
+}
+
+searchUsers(q: "apple") { result in
+  switch result {
+  case let .success(json):
+    print(json)
+  case let .failure(error):
+    print(error)
   }
 }
 
