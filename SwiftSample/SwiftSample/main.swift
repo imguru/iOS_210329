@@ -62,8 +62,6 @@ func searchUsers(q: String, completion: @escaping (Result<JSON, SearchResultErro
 // Result<SuccessT, FailureT>  -> mapError     -> Result<SuccessT, Result<SuccessT, FailureU>>
 // Result<SuccessT, FailureT>  -> flatMapError -> Result<SuccessT, FailureU>
 
-
-
 func searchUsers(q: String, completion: @escaping (Result<JSON, SearchResultError>) -> Void) {
   let encodedQuery = q.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) // String?
 
