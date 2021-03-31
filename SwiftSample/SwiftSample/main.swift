@@ -2,7 +2,7 @@
 import Foundation
 
 // 아래의 컬렉션에서 반복자를 구현해봅시다.
-// 2. AnyIterator를 이용하는 방법
+// 2. AnyIterator를 이용하는 방법(Boxing)
 #if false
 mutating func next() -> Element? {
   guard let (key, value) = store.first else {
