@@ -9,11 +9,13 @@ struct User {
   let name: String
   let commitCount: Int
 }
+
+#if false
+// 1. for-loop
 func resolveCounts(stat: [User]) -> [String] {
   var result = [String]()
-  
+
   for user in stat {
-    
     let message: String
     switch user.commitCount {
     case 0:
@@ -23,10 +25,10 @@ func resolveCounts(stat: [User]) -> [String] {
     default:
       message = "\(user.name): 열심히 했음"
     }
-    
+
     result.append(message)
   }
-  
+
   #if false
   for user in stat {
     var message = ""
@@ -38,12 +40,30 @@ func resolveCounts(stat: [User]) -> [String] {
     default:
       message = "\(user.name): 열심히 했음"
     }
-    
+
     result.append(message)
   }
   #endif
-  
+
   return result
+}
+#endif
+
+// 2. map
+//   [T] -> map -> [U]
+func resolveCounts(stat: [User]) -> [String] {
+  return stat.map { user -> String in
+    let message: String
+    switch user.commitCount {
+    case 0:
+      message = "\(user.name): 아무것도 안함"
+    case 1 ..< 100:
+      message = "\(user.name): 열심히 안함"
+    default:
+      message = "\(user.name): 열심히 했음"
+    }
+    return message
+  }
 }
 
 let commitsPerUser: [User] = [
