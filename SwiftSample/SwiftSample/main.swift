@@ -60,13 +60,14 @@ let strings = [
 // - 예전 이름이 flatMap 이었습니다. : deprecated
 
 // compactMap: Optional의 결과에서 nil을 제거하고, 실제 Wrapped 타입으로 결과를 변환합니다.
+
+
+#if false
 let urls = strings.compactMap {
   URL(string: $0) // init?(...)
 }
 print(urls)
 
-
-#if false
 let urls: [URL] = strings.map {
   URL(string: $0) // init?(...)
 }.filter {
@@ -78,3 +79,25 @@ print(urls)
 #endif
 
 
+let urls: [URL?] = strings.map {
+  URL(string: $0) // init?(...)
+}
+
+// 방법 1.
+for url in urls {
+  guard let url = url else {
+    continue
+  }
+  
+  print(url)
+}
+
+// 방법 2.
+for case let .some(url) in urls {
+  print(url)
+}
+
+// 방법 3. 가장 좋은 방법
+for case let url? in urls {
+   print(url)
+}
