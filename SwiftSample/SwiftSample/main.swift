@@ -1,103 +1,31 @@
 
 import Foundation
 
-// map
-//  Sequence / Optional
-// -----------------------------
-//   Array<A>       Array<B>
-//    [ A ]  -> map -> [ B ]
+// Result
+//  : 'Swift 5'의 공식적인 오류 처리에 대한 솔루션 입니다.
+//  => 매우 중요합니다.
 
-//  Optional<A>     Optional<B>
-//      A?  -> map ->  B?
+// 비동기
+//  1) 동기적인 함수에서의 오류는 예외 또는 Optional를 통해서 처리할 수 있습니다.
+//  2) 비동기 함수에서의 오류는 예외를 통해 처리하는 것이 불가능합니다.
+//    => 별도의 스레드를 통해 통해 동작하는 비동기의 오류는 예외를 통해 전파될 수 없습니다.
+//    => 오류의 인자(Error)를 콜백 함수의 마지막 인자를 통해 처리하는 것이 일반적입니다.
 
-let suits = ["Hearts", "Clubs", "Diamonds", "Spades"]
-// let faces = ["2", "3", "4" ]
-let faces = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"]
+let url = "https://api.github.com/users/apple"
 
-// Array<String> -> map        -> Array<Array<Tuple>>
-
-#if false
-let deck = suits.map { suit in
-  faces.map { face in
-    (suit, face)
+func getJSON(with url: URL) {
+  let task = URLSession.shared.dataTask(with: url) { (data: Data?, response: URLResponse?, error: Error?) in
+      print("complete")
   }
-}
-#endif
 
-//                 flatten
-// Array<String> -> flatMap    -> Array<Tuple>
-let deck = suits.flatMap { suit in
-  faces.map { face in
-    (suit, face)
-  }
+  // 별도의 스레드 풀에서 비동기적으로 수행됩니다.
+  task.resume()
 }
 
-// print(deck)
-let info = [
-  "url": "https://api.github.com/users",
-]
-
-let path: String? = info["url"]
-// String -> URL
-
-// Optional<String> -> map -> Optional<Optional<URL>>
-let url = path.map { URL(string: $0) }
-print(type(of: url))
-
-// Optional<String> -> flatMap -> Optional<URL>
-let url2 = path.flatMap { URL(string: $0) }
-print(type(of: url2))
-
-// --------------
-
-let strings = [
-  "https://naver.com",
-  "https://daum.net",
-  " ",
-  "https://facebook.com",
-]
-
-// - 예전 이름이 flatMap 이었습니다. : deprecated
-
-// compactMap: Optional의 결과에서 nil을 제거하고, 실제 Wrapped 타입으로 결과를 변환합니다.
-
-
-#if false
-let urls = strings.compactMap {
-  URL(string: $0) // init?(...)
-}
-print(urls)
-
-let urls: [URL] = strings.map {
-  URL(string: $0) // init?(...)
-}.filter {
-  $0 != nil
-}.map {
-  $0!
-}
-print(urls)
-#endif
-
-
-let urls: [URL?] = strings.map {
-  URL(string: $0) // init?(...)
+if let url = URL(string: url) {
+  getJSON(with: url)
 }
 
-// 방법 1.
-for url in urls {
-  guard let url = url else {
-    continue
-  }
-  
-  print(url)
-}
+sleep(1)
 
-// 방법 2.
-for case let .some(url) in urls {
-  print(url)
-}
 
-// 방법 3. 가장 좋은 방법
-for case let url? in urls {
-   print(url)
-}
