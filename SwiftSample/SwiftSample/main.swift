@@ -63,20 +63,20 @@ class Node<Element> {
 // Sequence
 #if false
 public protocol Sequence {
-    associatedtype Element where Self.Element == Self.Iterator.Element
-    associatedtype Iterator : IteratorProtocol
+  associatedtype Element where Self.Element == Self.Iterator.Element
+  associatedtype Iterator: IteratorProtocol
 
-    func makeIterator() -> Self.Iterator
+  func makeIterator() -> Self.Iterator
 }
 #endif
 
 struct SingleList<Element>: Sequence {
   typealias Iterator = SingleListIterator<Element>
-  
+
   func makeIterator() -> SingleListIterator<Element> {
     return SingleListIterator(current: head)
   }
-  
+
   var head: Node<Element>?
 
   mutating func append(_ element: Element) {
@@ -98,10 +98,22 @@ while let e = iterator.next() {
   print(e)
 }
 
-for e in list {
+// Sequnce / IteratorProtocol을 만족하면 다양한 기능을 사용할 수 있습니다.
+let result = list.sorted()
+for e in result {
   print(e)
 }
 
+list
+  .map { e in
+    e * 10
+  }
+  .filter { e in
+      return e >= 200
+  }
+  .forEach { e in
+    print(e)
+  }
 
 #if false
 if let result = list.firstElement() {
