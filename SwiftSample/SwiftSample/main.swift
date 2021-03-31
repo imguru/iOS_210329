@@ -129,9 +129,9 @@ print(a)
 let fn = { (a: inout Int) in
   a += 10
 }
+
 fn(&a)
 print(a)
-
 
 #if false
 class Interger {
@@ -150,3 +150,13 @@ func foo(a: Interger) {
   a.plus(10)
 }
 #endif
+
+// 3. zip
+//  => 두 개의 컬렉션을 하나의 컬렉션으로 묶을 수 있습니다.
+//     하나의 컬렉션이 크기가 작을 경우도 처리해줍니다.
+let numbers = 0 ..< 100
+let grades = [ "A", "B", "C", "D" ]
+
+for (number, grade) in zip(numbers, grades) {
+  print("\(number) / \(grade)")
+}
