@@ -38,7 +38,7 @@ if let url = URL(string: url) {
 // 3. 클로저가 호출되는 시점이 함수가 종료된 이후라면, @escaping을 지정해야 합니다.
 // 4. 클로저의 타입이 Optional인 경우 자동으로 @escaping입니다.
 // func getJSON(with url: URL, completion: @escaping (Data?, Error?) -> Void) {
-
+#if false
 func getJSON(with url: URL, completion: ((Data?, Error?) -> Void)? = nil) {
   let task = URLSession.shared.dataTask(with: url) { (data: Data?, _: URLResponse?, error: Error?) in
     completion?(data, error)
@@ -50,18 +50,54 @@ func getJSON(with url: URL, completion: ((Data?, Error?) -> Void)? = nil) {
 
 if let url = URL(string: url) {
   getJSON(with: url) { data, error in
-    
+
     if let error = error {
       print("Failed: \(error)")
     } else if let data = data {
       print("Succeed: \(data)")
     } else {
-      print("????")  // 이 상태는 존재하지 않습니다.
+      print("????") // 이 상태는 존재하지 않습니다.
       // 해결방법: 조건문을 통해 상호 베타적인 관계를 표현하는 것이 어렵습니다.
       //         enum 기반의 Result를 이용하면 가능합니다.
     }
-    
   }
 }
 
 sleep(1)
+#endif
+
+// Result는 enum 입니다.
+// => 'Optional' 가 유사합니다.
+/*
+ enum Optional<Wrapped> {
+   case .none
+   case .some(Wrapped)
+ }
+ */
+
+#if false
+enum Result<Success, Failure: Error> {
+  case success(Success)
+  case failure(Failure)
+}
+#endif
+
+enum NetworkError: Error {
+  case fetchFailed(Error)
+}
+
+func getJSON(with url: URL, completion: @escaping (Result<Data, NetworkError>) -> Void) {
+  let task = URLSession.shared.dataTask(with: url) { (data: Data?, _: URLResponse?, error: Error?) in
+    
+    if let error = error {
+      // completion(.failure(error))               // Result<Data, Error>
+      completion(.failure(.fetchFailed(error)))    // Result<Data, NetworkError>
+    } else if let data = data {
+      completion(.success(data))
+    }
+    
+  }
+
+  // 별도의 스레드 풀에서 비동기적으로 수행됩니다.
+  task.resume()
+}
