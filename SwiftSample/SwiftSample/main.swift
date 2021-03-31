@@ -4,6 +4,32 @@ import Foundation
 //                  Sequence
 //                      |
 //                  Collection
+//                      |
+//   -------------------------------------------
+//   |
+// MutableCollection
+
+// 1) MutableCollection
+//   : 길이를 변경하지 않고 요소를 값을 변경할 수 있는 연산을 제공한다.
+//    - sort
+var arr = [ 1, 3, 5, 7, 9, 2, 4, 6, 8, 10 ]
+arr.sort()
+print(arr)
+
+let index = arr.partition { e -> Bool in
+  e % 2 == 0
+}
+// print(index)
+let result1 = arr[..<index]
+let result2 = arr[index...]
+
+print(result1)
+print(result2)
+
+
+
+
+
 #if false
 public protocol Collection: Sequence {
   associatedtype Element
@@ -18,6 +44,7 @@ public protocol Collection: Sequence {
 }
 #endif
 
+#if false
 struct Fruits {
   let banana = "Banana"
   let apple = "Apple"
@@ -63,3 +90,4 @@ print(result)
 
 let result2 = fruits.sorted()
 print(result2)
+#endif
