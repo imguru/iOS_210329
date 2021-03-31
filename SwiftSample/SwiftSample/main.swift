@@ -23,7 +23,32 @@ while let name = iterator.next() {
 
 // Swift
 // - IteratorProtocol
-// - Sequence
+#if false
+public protocol IteratorProtocol {
+  associatedtype Element
+  mutating func next() -> Self.Element?
+}
+#endif
+
+struct SingleListIterator<Element>: IteratorProtocol {
+  var current: Node<Element>?
+
+  mutating func next() -> Element? {
+    defer {
+      current = current?.next
+    }
+
+    return current?.value
+  }
+
+  #if false
+  mutating func next() -> Element? {
+    let result = current?.value
+    current = current?.next
+    return result
+  }
+  #endif
+}
 
 class Node<Element> {
   var value: Element
@@ -35,7 +60,23 @@ class Node<Element> {
   }
 }
 
-struct SingleList<Element> {
+// Sequence
+#if false
+public protocol Sequence {
+    associatedtype Element where Self.Element == Self.Iterator.Element
+    associatedtype Iterator : IteratorProtocol
+
+    func makeIterator() -> Self.Iterator
+}
+#endif
+
+struct SingleList<Element>: Sequence {
+  typealias Iterator = SingleListIterator<Element>
+  
+  func makeIterator() -> SingleListIterator<Element> {
+    return SingleListIterator(current: head)
+  }
+  
   var head: Node<Element>?
 
   mutating func append(_ element: Element) {
