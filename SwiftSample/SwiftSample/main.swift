@@ -70,10 +70,16 @@ func resolveCounts(stat: [User]) -> [String] {
 func counts(stat: [User]) -> [Int] {
   var counts = [Int]()
 
+  #if false
   for user in stat {
     if user.commitCount > 0 {
       counts.append(user.commitCount)
     }
+  }
+  #endif
+  
+  for user in stat where user.commitCount > 0 {
+    counts.append(user.commitCount)
   }
 
   // return counts.sorted()  // <
@@ -82,7 +88,7 @@ func counts(stat: [User]) -> [Int] {
     a > b
   }
   #endif
-  
+
   return counts.sorted(by: >)
 }
 
