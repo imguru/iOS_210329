@@ -5,9 +5,11 @@ import Foundation
 //                      |
 //                  Collection
 //                      |
-//   -------------------------------------------
-//   |
-// MutableCollection
+//   ----------------------------------------------------------------
+//   |                            |                                 |
+// MutableCollection       RangeReplicationCollection      BidirectionColleciton
+//                                                                  |
+//                                                         RandomAcesssCollection
 
 // 1) MutableCollection
 //   : 길이를 변경하지 않고 요소를 값을 변경할 수 있는 연산을 제공한다.
@@ -25,6 +27,43 @@ let result2 = arr[index...]
 
 print(result1)
 print(result2)
+
+// 2) RangeReplicationCollection
+//   => 길이를 변경할 수 있다.
+//     removeFirst / removeSubrange / removeAll
+//     +=
+
+arr += [ 1, 2, 3 ]
+print(arr)
+
+arr.removeAll { e -> Bool in
+  e % 2 == 0
+}
+print(arr)
+
+// 3) BidirectionColleciton
+//  - 양방향으로 이동할 수 있다.
+//  - 역방향 순회가 가능합니다.
+#if false
+var lastIndex = arr.endIndex
+while lastIndex > arr.startIndex {
+  lastIndex = arr.index(before: lastIndex)
+  print(arr[lastIndex])
+}
+#endif
+
+for value in arr.reversed() {
+  print(value)
+}
+
+// 4) RandomAccessCollection
+//   - BidirectionCollection을 상속하며, 성능적인 향상을 제공합니다.
+//     인덱스 기반 접근의 효율이 O(1) 입니다.
+let repeated = repeatElement("hello", count: 10)
+print(repeated[3])
+
+print(arr[5])
+
 
 
 
