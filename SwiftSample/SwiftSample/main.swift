@@ -11,6 +11,7 @@ enum SearchResultError: Error {
 
 typealias JSON = [String: Any]
 
+#if false
 func searchUsers(q: String, completion: @escaping (Result<JSON, SearchResultError>) -> Void) {
   let encodedQuery = q.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) // String?
 
@@ -41,6 +42,62 @@ func searchUsers(q: String, completion: @escaping (Result<JSON, SearchResultErro
     }
   }
 }
+#endif
+
+func searchUsers(q: String, completion: @escaping (Result<JSON, SearchResultError>) -> Void) {
+  let encodedQuery = q.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) // String?
+
+  // String? -> map -> String?
+  let path = encodedQuery.map {
+    searchUrl + $0
+  }
+
+  guard let url = path.flatMap(URL.init) else {
+    completion(.failure(.invalidQuery(q)))
+    return
+  }
+
+  getJSON(with: url) { result in
+    let convertedResult = result // Result<Data, NetworkError>
+      .mapError { (error: NetworkError) -> SearchResultError in // Result<Data, SearchResultError>
+        .networkError(error)
+      }
+      .flatMap { (data: Data) -> Result<JSON, SearchResultError> in
+        if let json = try? JSONSerialization.jsonObject(with: data, options: []),
+           let jsonDic = json as? JSON
+        {
+          return .success(jsonDic)
+        } else {
+          return .failure(.invalidJSON)
+        }
+      }
+
+    completion(convertedResult)
+  }
+
+#if false
+  getJSON(with: url) { result in
+    switch result {
+    // - Result<Data, NetworkError>  ->  flatMap  ->  Result<JSON, SearchResultError>
+    case let .success(data):
+      if let json = try? JSONSerialization.jsonObject(with: data, options: []),
+         let jsonDic = json as? JSON
+      {
+        completion(.success(jsonDic)) // Result<JSON, SearchResultError>
+      } else {
+        completion(.failure(.invalidJSON)) // Result<JSON, SearchResultError>
+      }
+
+    // NetworkError -> map -> SearchResultError
+
+    // Result
+    // - Result<Data, NetworkError>  ->  mapError  ->  Result<Data, SearchResultError>
+    case let .failure(error):
+      completion(.failure(.networkError(error)))
+    }
+  }
+#endif
+}
 
 searchUsers(q: "apple") { result in
   switch result {
@@ -50,6 +107,7 @@ searchUsers(q: "apple") { result in
     print(error)
   }
 }
+
 sleep(1)
 
 // ----------------------------
