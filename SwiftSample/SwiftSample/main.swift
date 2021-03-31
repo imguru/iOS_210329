@@ -61,6 +61,7 @@ var result = 0;
 #endif
 
 let newlineCount = text.reduce(0) { (result, char) -> Int in
+  print(char)
   if char == "\n" {
     return result + 1
   } else {
