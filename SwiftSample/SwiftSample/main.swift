@@ -51,17 +51,18 @@ me
 the
 money
 """
-#if false
 
-var result = 0;
-// for ... {
-//   result += 1
-// }
+var result = 0
+for char in text {
+  if char == "\n" {
+    result += 1
+  }
+}
 
-#endif
+print(result)
 
 let newlineCount = text.reduce(0) { (result, char) -> Int in
-  print(char)
+  // print(char)
   if char == "\n" {
     return result + 1
   } else {
@@ -70,3 +71,51 @@ let newlineCount = text.reduce(0) { (result, char) -> Int in
 }
 
 print(newlineCount)
+
+let scores = [77, 56, 65, 80, 92, 100, 80, 92, 100, 55, 42, 75]
+
+// [String: Int]
+
+// 문제점: 요소의 개수가 많을 경우, temp = result 복사 비용의 증가도 고려되어야 한다.
+let stat1 = scores.reduce([String: Int]()) { result, score in
+  var temp = result
+  switch score {
+  case 0 ..< 70:
+    #if false
+    if let v = temp["D"] {
+      temp["D"] = v + 1
+    }
+    #endif
+    temp["D", default: 0] += 1
+  case 70 ..< 80:
+    temp["C", default: 0] += 1
+
+  case 80 ..< 90:
+    temp["B", default: 0] += 1
+  case 90...:
+    temp["A", default: 0] += 1
+  default:
+    break
+  }
+  return temp
+}
+
+let stat2 = scores.reduce(into: [:]) { (result: inout [String: Int], score: Int) in
+  switch score {
+  case 0 ..< 70:
+    result["D", default: 0] += 1
+  case 70 ..< 80:
+    result["C", default: 0] += 1
+  case 80 ..< 90:
+    result["B", default: 0] += 1
+  case 90...:
+    result["A", default: 0] += 1
+  default:
+    break
+  }
+}
+print(stat2)
+
+
+
+print(stat1)
