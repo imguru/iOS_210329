@@ -11,9 +11,33 @@ func removeEmojis(_ text: String) -> String {
 }
 
 // Emoji: Command + Ctrl + Space
+let message: String? = "Hello,😘🤬 wo😘🤬rl🍅d sh😘🤬ow m🍅e t😘🤬he m😘🤬oney"
+if let message = message {
+  let result = removeEmojis(message)
+  print(result)
+}
 
-let message = "Hello,😘🤬 wo😘🤬rld sh😘🤬ow me t😘🤬he m😘🤬oney"
+// [ T ]            -> map  -> [ U ]
+// Optional<T>      -> map  -> Optional<U>
+
+// message: String? -> map ->
+
+let result = message.map { message in
+  removeEmojis(message)
+}
+if let result = result {
+  print(result)
+}
+
+// print(result)
+
+
+
+
+
+#if false
+let message = "Hello,😘🤬 wo😘🤬rl🍅d sh😘🤬ow m🍅e t😘🤬he m😘🤬oney"
 let result = removeEmojis(message)
 
-
 print(result)
+#endif
