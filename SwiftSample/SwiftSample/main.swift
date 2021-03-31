@@ -93,6 +93,18 @@ list.append(10)
 list.append(20)
 list.append(30)
 
+var iterator = list.makeIterator()
+while let e = iterator.next() {
+  print(e)
+}
+
+for e in list {
+  print(e)
+}
+
+
+#if false
 if let result = list.firstElement() {
   print(result)
 }
+#endif
