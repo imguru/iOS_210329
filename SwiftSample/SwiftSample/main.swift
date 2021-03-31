@@ -90,7 +90,6 @@ func searchUsers(q: String, completion: @escaping (Result<JSON, SearchResultErro
         } else {
           return .failure(.invalidJSON)
         }
-        
       }
 
     completion(c)
