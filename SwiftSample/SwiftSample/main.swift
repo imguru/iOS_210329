@@ -12,8 +12,10 @@ import Foundation
 
 // 1. lazy: 많은 데이터를 다룰 때 유용합니다.
 //       - 중첩된 클로저의 연산을 한번에 처리합니다.
+//       - 결과를 얻기 위해서는 순회가 필요하다.
+// let arr = 0 ..< Int.max
+let arr = 0...1000
 
-let arr = 0 ..< Int.max
 let result = arr
   .lazy
   .filter { e -> Bool in
@@ -23,7 +25,8 @@ let result = arr
     return e / 11
   }
   .suffix(3)
-// print(result)
+
+ print(result)
 
 for e in result {
   print(e)
