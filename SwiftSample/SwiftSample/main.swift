@@ -24,7 +24,7 @@ if let message = message {
 // message: String? -> map ->
 
 #if false
-let result = message.map { message in
+let result: String? = message.map { message in
   removeEmojis(message)
 }
 
@@ -43,7 +43,6 @@ if let result = message.map { removeEmojis($0) } {
 if let result = message.map({ removeEmojis($0) }) {
   print(result)
 }
-
 
 // // (String) -> String
 if let result = message.map(removeEmojis) {
@@ -68,7 +67,7 @@ func filter(_ data: [Int], predicate: (Int) -> Bool) -> [Int] {
   return result
 }
 
-let arr = [ 1, 3, 5, 7, 9, 2, 4, 6, 8, 10 ]
+let arr = [1, 3, 5, 7, 9, 2, 4, 6, 8, 10]
 var result2 = filter(arr, predicate: { e -> Bool in
   e.isMultiple(of: 3)
 })
@@ -109,26 +108,28 @@ fn = mul
 let result3 = fn(10, 20)
 print(result3)
 
-//---------
+// ---------
 struct User {
   let age: Int
-  
+
   // add의 시그니처는 무엇인가요?
   // - 메소드는 연관된 객체가 존재한다.
   // - thiscall: 암묵적으로 메소드의 첫번째 인자로 객체의 주소가 전달된다.
+
+  // (User, Int, Int) -> Int    : C++ / Kotlin
+  // (User) -> (Int, Int) -> Int : Swift - 커링(지연 호출)
   
-  // (User, Int, Int) -> Int
-  //-------
+  // -------
   // (Int, Int) -> Int
   //  let user = User()
   //  user.add(10, 20)
   //  user.add
-  
+
   func add(a: Int, b: Int) -> Int {
     print("User::add")
     return a + b
   }
-  
+
   func foo(a: Int) -> Bool {
     return a.isMultiple(of: 3)
   }
@@ -137,17 +138,37 @@ struct User {
 let user = User(age: 100)
 // let result = user.add(a: 10, b: 20)  // add(self: user, a: 10, b: 20)
 
-fn = user.add      // Bound reference: 객체가 결정되어 있다.
+fn = user.add // Bound reference: 객체가 결정되어 있다.
 let result = fn(10, 20)
 print(result)
-
 
 //                     (Int) -> Bool
 result2 = filter(arr, predicate: user.foo)
 print(result2)
 
+// Optional - map(transform)
 
+// Int? -> map -> String?
+let a: Int? = 100
+#if false
+let s: String? = a.map { a in
+  String(a)
+}
+#endif
 
+if let s = a.map(String.init) {
+  print(s)
+}
 
+let x = User.add
+print(type(of: x))
 
+// (User) -> (Int, Int) -> Int
+//  : 함수의 시그니처를 표현하는 -> 는 우결합 합니다.
+//  => User의 타입을 인자로 받아서 Int 인자를 2개를 받고 Int를 반환하는 함수를 반환하는 함수
+let add = x(user) //
+let r = add(10, 20)
+print(r)
 
+// let r = x(user)(10, 20)
+// print(r)
