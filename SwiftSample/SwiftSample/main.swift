@@ -1,80 +1,65 @@
 
 import Foundation
 
-// 아래의 컬렉션에서 반복자를 구현해봅시다.
-// 2. AnyIterator를 이용하는 방법(Boxing)
+//                  Sequence
+//                      |
+//                  Collection
 #if false
-mutating func next() -> Element? {
-  guard let (key, value) = store.first else {
-    return nil
-  }
+public protocol Collection: Sequence {
+  associatedtype Element
+  associatedtype Index
 
-  if value > 1 {
-    store[key]? -= 1
-  } else {
-    store[key] = nil
-  }
+  var startIndex: Self.Index { get }
+  var endIndex: Self.Index { get } // 끝 다음 인덱스
 
-  return key
+  subscript(position: Self.Index) -> Self.Element { get }
+
+  func index(after i: Int) -> Self.Index
 }
 #endif
 
-extension Bag: Sequence {
-  func makeIterator() -> AnyIterator<Element> {
-    // init(store: ...)
-    var store = self.store
-    
-    // next() 로직을 클로저를 통해 전달합니다.
-    return AnyIterator {
-      guard let (key, value) = store.first else {
-        return nil
-      }
-
-      if value > 1 {
-        store[key]? -= 1
-      } else {
-        store[key] = nil
-      }
-
-      return key
-    }
-  }
+struct Fruits {
+  let banana = "Banana"
+  let apple = "Apple"
+  let tomato = "Tomato"
 }
 
-struct Bag<Element: Hashable> {
-  // private var store: [Element: Int] = [:]
-  private var store = [Element: Int]()
+extension Fruits: Collection {
+  typealias Element = String
+  typealias Index = Int
 
-  mutating func insert(_ element: Element) {
-    store[element, default: 0] += 1
+  var startIndex: Int {
+    return 0
   }
 
-  mutating func remove(_ element: Element) {
-    store[element, default: 0] -= 1
+  var endIndex: Int {
+    return 3
+  }
 
-    if store[element] == 0 {
-      store[element] = nil
+  subscript(position: Int) -> String {
+    switch position {
+    case 0: return banana
+    case 1: return apple
+    case 2: return tomato
+    default:
+      fatalError("Out of index")
     }
   }
 
-  var count: Int {
-    return store.values.reduce(0, +)
+  func index(after i: Int) -> Int {
+    return i + 1
   }
 }
 
-let text = """
-hello, world
-show me the money
-"""
-
-var bag = Bag<Character>()
-for e in text {
-  bag.insert(e)
-}
-
-print(bag.count)
-print(bag)
-
-for e in bag {
+// Collection은 Sequence를 만족합니다.
+let fruits = Fruits()
+for e in fruits {
   print(e)
 }
+let result = fruits.map { e in
+  e.uppercased()
+}
+print(result)
+
+let result2 = fruits.sorted()
+print(result2)
