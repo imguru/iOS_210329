@@ -1,6 +1,7 @@
 
 import Foundation
 
+// (String) -> String
 func removeEmojis(_ text: String) -> String {
   var scalars = text.unicodeScalars
   scalars.removeAll { e in
@@ -38,9 +39,17 @@ if let result = message.map { removeEmojis($0) } {
 }
 #endif
 
+#if false
+if let result = message.map({ removeEmojis($0) }) {
+  print(result)
+}
+
+
+// // (String) -> String
 if let result = message.map(removeEmojis) {
   print(result)
 }
+#endif
 
 // print(result)
 
@@ -50,3 +59,51 @@ let result = removeEmojis(message)
 
 print(result)
 #endif
+
+func filter(_ data: [Int], predicate: (Int) -> Bool) -> [Int] {
+  var result = [Int]()
+  for e in data where predicate(e) {
+    result.append(e)
+  }
+  return result
+}
+
+let arr = [ 1, 3, 5, 7, 9, 2, 4, 6, 8, 10 ]
+var result2 = filter(arr, predicate: { e -> Bool in
+  e.isMultiple(of: 3)
+})
+
+// 스위프트의 함수의 타입은 시그니처에 의해 결정된다.
+// '함수의 시그니처'는 함수의 인자와 반환 타입에 의해서 결정된다.
+// (Int) -> Bool
+func isMultiple3(_ value: Int) -> Bool {
+  return value.isMultiple(of: 3)
+}
+
+// Trailing Closure: 함수의 마지막 인자가 함수라면, 함수 블록을 함수 호출 괄호 밖으로 둘 수 있다.
+result2 = filter(arr) { e -> Bool in
+  isMultiple3(e)
+}
+
+result2 = filter(arr, predicate: isMultiple3)
+
+print(result2)
+
+// (Int, Int) -> Int
+func add(a: Int, b: Int) -> Int {
+  return a + b
+}
+func sub(a: Int, b: Int) -> Int {
+  return a - b
+}
+
+let mul = { (a: Int, b: Int) -> Int in
+  a * b
+}
+
+var fn: (Int, Int) -> Int = add
+fn = sub
+fn = mul
+
+let result3 = fn(10, 20)
+print(result3)
