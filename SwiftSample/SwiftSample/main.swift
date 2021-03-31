@@ -93,6 +93,7 @@ print(result2)
 func add(a: Int, b: Int) -> Int {
   return a + b
 }
+
 func sub(a: Int, b: Int) -> Int {
   return a - b
 }
@@ -107,3 +108,46 @@ fn = mul
 
 let result3 = fn(10, 20)
 print(result3)
+
+//---------
+struct User {
+  let age: Int
+  
+  // add의 시그니처는 무엇인가요?
+  // - 메소드는 연관된 객체가 존재한다.
+  // - thiscall: 암묵적으로 메소드의 첫번째 인자로 객체의 주소가 전달된다.
+  
+  // (User, Int, Int) -> Int
+  //-------
+  // (Int, Int) -> Int
+  //  let user = User()
+  //  user.add(10, 20)
+  //  user.add
+  
+  func add(a: Int, b: Int) -> Int {
+    print("User::add")
+    return a + b
+  }
+  
+  func foo(a: Int) -> Bool {
+    return a.isMultiple(of: 3)
+  }
+}
+
+let user = User(age: 100)
+// let result = user.add(a: 10, b: 20)  // add(self: user, a: 10, b: 20)
+
+fn = user.add      // Bound reference: 객체가 결정되어 있다.
+let result = fn(10, 20)
+print(result)
+
+
+//                     (Int) -> Bool
+result2 = filter(arr, predicate: user.foo)
+print(result2)
+
+
+
+
+
+
