@@ -66,6 +66,28 @@ func resolveCounts(stat: [User]) -> [String] {
   }
 }
 
+// commitCount가 0이 아닌 데이터를 정렬해서 반환한다.
+func counts(stat: [User]) -> [Int] {
+  var counts = [Int]()
+
+  for user in stat {
+    if user.commitCount > 0 {
+      counts.append(user.commitCount)
+    }
+  }
+
+  // return counts.sorted()  // <
+  #if false
+  return counts.sorted { (a, b) -> Bool in
+    a > b
+  }
+  #endif
+  
+  return counts.sorted(by: >)
+}
+
+// -------
+
 let commitsPerUser: [User] = [
   User(name: "Tom", commitCount: 30),
   User(name: "Bob", commitCount: 150),
@@ -74,3 +96,6 @@ let commitsPerUser: [User] = [
 
 let result = resolveCounts(stat: commitsPerUser)
 print(result)
+
+let result2 = counts(stat: commitsPerUser)
+print(result2)
