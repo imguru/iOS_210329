@@ -114,8 +114,39 @@ let stat2 = scores.reduce(into: [:]) { (result: inout [String: Int], score: Int)
     break
   }
 }
+
 print(stat2)
 
+//       int* a
+func foo(_ a: inout Int) {
+  a += 10
+}
+
+var a = 100
+foo(&a)
+print(a)
+
+let fn = { (a: inout Int) in
+  a += 10
+}
+fn(&a)
+print(a)
 
 
-print(stat1)
+#if false
+class Interger {
+  var v: Int
+  init(_ v: Int) {
+    self.v = v
+  }
+
+  func plus(_ v: Int) {
+    self.v += v
+  }
+}
+
+// Reference Type으로 전달해서 값을 변경하는 경우
+func foo(a: Interger) {
+  a.plus(10)
+}
+#endif
