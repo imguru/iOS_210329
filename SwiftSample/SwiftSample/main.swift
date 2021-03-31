@@ -89,9 +89,18 @@ enum NetworkError: Error {
 func getJSON(with url: URL, completion: @escaping (Result<Data, NetworkError>) -> Void) {
   let task = URLSession.shared.dataTask(with: url) { (data: Data?, _: URLResponse?, error: Error?) in
     
+    #if false
     if let error = error {
       // completion(.failure(error))               // Result<Data, Error>
       completion(.failure(.fetchFailed(error)))    // Result<Data, NetworkError>
+    } else if let data = data {
+      completion(.success(data))
+    }
+    #endif
+    
+    // error: Optional<Error>   ->   map   ->   Optional<NetworkError.fetchFailed>
+    if let error = error.map( { NetworkError.fetchFailed($0) }) {
+      completion(.failure(error))
     } else if let data = data {
       completion(.success(data))
     }
