@@ -44,6 +44,7 @@ let path: String? = info["url"]
 let url = path.map { URL(string: $0) }
 print(type(of: url))
 
+// Optional<String> -> flatMap -> Optional<URL>
 let url2 = path.flatMap { URL(string: $0) }
 print(type(of: url2))
 
@@ -56,7 +57,9 @@ let strings = [
   "https://facebook.com",
 ]
 
-// compactMap
+// - 예전 이름이 flatMap 이었습니다. : deprecated
+
+// compactMap: Optional의 결과에서 nil을 제거하고, 실제 Wrapped 타입으로 결과를 변환합니다.
 let urls = strings.compactMap {
   URL(string: $0) // init?(...)
 }
@@ -73,6 +76,5 @@ let urls: [URL] = strings.map {
 }
 print(urls)
 #endif
-
 
 
