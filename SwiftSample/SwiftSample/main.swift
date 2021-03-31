@@ -22,18 +22,27 @@ if let message = message {
 
 // message: String? -> map ->
 
+#if false
 let result = message.map { message in
   removeEmojis(message)
 }
+
 if let result = result {
+  print(result)
+}
+#endif
+
+#if false
+if let result = message.map { removeEmojis($0) } {
+  print(result)
+}
+#endif
+
+if let result = message.map(removeEmojis) {
   print(result)
 }
 
 // print(result)
-
-
-
-
 
 #if false
 let message = "Hello,😘🤬 wo😘🤬rl🍅d sh😘🤬ow m🍅e t😘🤬he m😘🤬oney"
