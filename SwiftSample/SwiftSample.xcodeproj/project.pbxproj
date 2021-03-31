@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7AB84F49261438B700A0C75B /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AB84F48261438B700A0C75B /* main.swift */; };
+		7AB84F4D261446F000A0C75B /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AB84F4C261446F000A0C75B /* main.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -37,7 +37,8 @@
 		7A5184F92611A753007CB908 /* 6_Optional2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = 6_Optional2.swift; sourceTree = "<group>"; };
 		7A5184FD2611B9C6007CB908 /* 7_초기화메소드.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "7_초기화메소드.swift"; sourceTree = "<group>"; };
 		7AB84F44261432D400A0C75B /* 11_연산자.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "11_연산자.swift"; sourceTree = "<group>"; };
-		7AB84F48261438B700A0C75B /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		7AB84F48261438B700A0C75B /* 11_연산자2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "11_연산자2.swift"; sourceTree = "<group>"; };
+		7AB84F4C261446F000A0C75B /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		7AD9EA2A2612A8AB00902827 /* 8_오류처리.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "8_오류처리.swift"; sourceTree = "<group>"; };
 		7AD9EA2E2612B2B800902827 /* 8_오류처리2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "8_오류처리2.swift"; sourceTree = "<group>"; };
 		7AD9EA322612BCF500902827 /* 8_오류처리3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "8_오류처리3.swift"; sourceTree = "<group>"; };
@@ -119,7 +120,8 @@
 				7AD9EA6D2614176600902827 /* 10_Sequence4.swift */,
 				7AD9EA712614198500902827 /* 10_Sequence5.swift */,
 				7AB84F44261432D400A0C75B /* 11_연산자.swift */,
-				7AB84F48261438B700A0C75B /* main.swift */,
+				7AB84F48261438B700A0C75B /* 11_연산자2.swift */,
+				7AB84F4C261446F000A0C75B /* main.swift */,
 			);
 			path = SwiftSample;
 			sourceTree = "<group>";
@@ -182,7 +184,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7AB84F49261438B700A0C75B /* main.swift in Sources */,
+				7AB84F4D261446F000A0C75B /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
