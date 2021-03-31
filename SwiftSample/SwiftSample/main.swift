@@ -62,7 +62,7 @@ func searchUsers(q: String, completion: @escaping (Result<JSON, SearchResultErro
     // Result<Data, NetworkError> -> xxx -> Result<JSON, SearchResultError>
     // completion(result)
 
-    let c: Result<JSON, SearchResultError> = result // Result<Data, NetworkError>
+    let c: Result<JSON, SearchResultError> = result            // Result<Data, NetworkError>
       .mapError { (error: NetworkError) -> SearchResultError in // Result<Data, SearchResultError>
         .networkError(error)
       }
