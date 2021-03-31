@@ -14,8 +14,15 @@ import Foundation
 let url = "https://api.github.com/users/apple"
 
 func getJSON(with url: URL) {
-  let task = URLSession.shared.dataTask(with: url) { (data: Data?, response: URLResponse?, error: Error?) in
-      print("complete")
+  let task = URLSession.shared.dataTask(with: url) { (data: Data?, _: URLResponse?, error: Error?) in
+    if let error = error {
+      print("Failed - \(error)")
+      return
+    }
+
+    if let data = data, let value = String(data: data, encoding: .utf8) {
+      print(value)
+    }
   }
 
   // 별도의 스레드 풀에서 비동기적으로 수행됩니다.
@@ -27,5 +34,3 @@ if let url = URL(string: url) {
 }
 
 sleep(1)
-
-
