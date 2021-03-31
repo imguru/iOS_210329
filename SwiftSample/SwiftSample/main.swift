@@ -99,7 +99,15 @@ func getJSON(with url: URL, completion: @escaping (Result<Data, NetworkError>) -
     #endif
     
     // error: Optional<Error>   ->   map   ->   Optional<NetworkError.fetchFailed>
+    #if false
     if let error = error.map( { NetworkError.fetchFailed($0) }) {
+      completion(.failure(error))
+    } else if let data = data {
+      completion(.success(data))
+    }
+    #endif
+    
+    if let error = error.map(NetworkError.fetchFailed) {
       completion(.failure(error))
     } else if let data = data {
       completion(.success(data))
