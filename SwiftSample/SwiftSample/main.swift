@@ -7,16 +7,29 @@ import Foundation
 //  - filter: 데이터를 조건에 따라 필터한다.
 //  - shuffled: 데이터를 랜덤으로 섞는다.
 
-let arr = 0..<1000  // 0..<1000 : Range
-                    // 0...1000 : ClosedRange
+// let arr = 0..<1000  // 0..<1000 : Range
+                       // 0...1000 : ClosedRange
 
+// 1. lazy: 많은 데이터를 다룰 때 유용합니다.
+//       - 중첩된 클로저의 연산을 한번에 처리합니다.
+
+let arr = 0 ..< Int.max
 let result = arr
+  .lazy
   .filter { e -> Bool in
     e.isMultiple(of: 22)
   }
   .map { e in
     return e / 11
   }
-  .shuffled()
+  .suffix(3)
+// print(result)
 
-print(result)
+for e in result {
+  print(e)
+}
+print("-------------")
+
+for e in result {
+  print(e)
+}
