@@ -11,6 +11,23 @@ struct User {
 }
 func resolveCounts(stat: [User]) -> [String] {
   var result = [String]()
+  
+  for user in stat {
+    
+    let message: String
+    switch user.commitCount {
+    case 0:
+      message = "\(user.name): 아무것도 안함"
+    case 1 ..< 100:
+      message = "\(user.name): 열심히 안함"
+    default:
+      message = "\(user.name): 열심히 했음"
+    }
+    
+    result.append(message)
+  }
+  
+  #if false
   for user in stat {
     var message = ""
     switch user.commitCount {
@@ -24,6 +41,8 @@ func resolveCounts(stat: [User]) -> [String] {
     
     result.append(message)
   }
+  #endif
+  
   return result
 }
 
