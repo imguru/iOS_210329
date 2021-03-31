@@ -66,24 +66,21 @@ print(arr[5])
 
 
 
+//#if false
+//public protocol Collection: Sequence {
+//  associatedtype Element
+//  associatedtype Index
+//
+//  var startIndex: Self.Index { get }
+//  var endIndex: Self.Index { get } // 끝 다음 인덱스
+//
+//  subscript(position: Self.Index) -> Self.Element { get }
+//
+//  func index(after i: Int) -> Self.Index
+//}
+//#endif
 
-
-
-#if false
-public protocol Collection: Sequence {
-  associatedtype Element
-  associatedtype Index
-
-  var startIndex: Self.Index { get }
-  var endIndex: Self.Index { get } // 끝 다음 인덱스
-
-  subscript(position: Self.Index) -> Self.Element { get }
-
-  func index(after i: Int) -> Self.Index
-}
-#endif
-
-#if false
+#if true
 struct Fruits {
   let banana = "Banana"
   let apple = "Apple"
