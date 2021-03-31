@@ -80,6 +80,7 @@ func counts(stat: [User]) -> [Int] {
   #endif
 
   // filter
+  // map
   for user in stat where user.commitCount > 0 {
     counts.append(user.commitCount)
   }
@@ -91,21 +92,25 @@ func counts(stat: [User]) -> [Int] {
   }
   #endif
 
-  // map
+  
   // sort
   return counts.sorted(by: >)
 }
 #endif
+// N + NlogN
 
+// 선언적인 코드 - '가독성'이 좋다
+//   문제점: 불필요한 루프로 인해 성능 처리에 문제가 될수 있습니다.
+//         직접 알고리즘을 작성하는 것이 효율적일 수 있습니다.
 func counts(stat: [User]) -> [Int] {
   return stat
-    .filter { e in
+    .filter { e in         // N
       e.commitCount > 0
     }
-    .map { e in
+    .map { e in            // N
       e.commitCount
     }
-    .sorted(by: <)
+    .sorted(by: <)         // NlogN
 }
 
 // -------
