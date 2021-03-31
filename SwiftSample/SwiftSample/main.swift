@@ -52,7 +52,6 @@ func searchUsers(q: String, completion: @escaping (Result<JSON, SearchResultErro
 //     Result<SuccessT, FailureT>  ->  map       ->  Result<SuccessU, FailureT>  ; SuccessT -> SuccessU
 //     Result<SuccessT, FailureT>  ->  mapError  ->  Result<SuccessT, FailureU>  ; FailureT -> FailureU
 
-
 //   - flatMap / flatMapError
 //   ; SuccessT -> Result<SuccessU, FailureT>
 // Result<SuccessT, FailureT>  ->  map  -> Result<Result<SuccessU, FailureT>, FailureT>
@@ -93,6 +92,7 @@ func searchUsers(q: String, completion: @escaping (Result<JSON, SearchResultErro
         } else {
           return .failure(.invalidJSON)
         }
+        
       }
 
     completion(c)
