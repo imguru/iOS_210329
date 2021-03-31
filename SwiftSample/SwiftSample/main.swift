@@ -50,6 +50,7 @@ searchUsers(q: "apple") { result in
     print(error)
   }
 }
+sleep(1)
 
 // ----------------------------
 // 이전 소스 참조
