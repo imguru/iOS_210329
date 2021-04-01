@@ -1,7 +1,7 @@
 
 import UIKit
 
-let IMAGE_URL = URL(string: "https://picsum.photos/1024/1024")!
+let IMAGE_URL = URL(string: "https://picsum.photos/2048/2048")!
 
 class ViewController: UIViewController {
   @IBOutlet var imageView: UIImageView!
@@ -25,5 +25,9 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     // Do any additional setup after loading the view.
+    
+    Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
+      self.timeLabel.text = "\(Date().timeIntervalSinceNow)"
+    }
   }
 }
