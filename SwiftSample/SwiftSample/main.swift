@@ -1,76 +1,36 @@
 
 import Foundation
 
-// 다형성
-//  - 상속
-#if false
-class Displayble {
-  func display() {}
-}
+// Conditional Comformance(조건부 순응)
 
-class User: Displayble {
-  override func display() {
-    print("User display")
+struct Actor: Equatable {}
+
+// 구조체 내부의 모든 속성이 Equtable을 만족하면, Movie도 Equtable을 자동으로 제공한다.
+struct Movie: Equatable {
+  let title: String
+  let rating: Float
+  let actor: Actor? = nil
+
+  init(title: String, rating: Float) {
+    self.title = title
+    self.rating = rating
   }
-}
 
-class Car: Displayble {
-  override func display() {
-    print("Car display")
+  func play() {
+    print("Movie play - \(title)/\(rating)")
   }
-}
 
-let arr: [Displayble] = [
-  User(),
-  Car(),
-]
-for e in arr {
-  e.display()
-}
-#endif
-
-// Duck(오리) Typing 설계
-//  => 동일한 행위를 가지고 있는 객체를 대상으로 다형성을 구현할 수 있다.
-//  - Javasciprt / Ruby / Python
-//  문제점: 해당 기능을 제공하지 않을 경우 런타임에 오류가 발생한다.
-//
-//  스위프트는 protocol / extension을 통해서 해당 기능을 안전하게 구현할 수 있습니다.
-
-class User {
-  func display() {
-    print("User display")
+  #if false
+  static func == (lhs: Movie, rhs: Movie) -> Bool {
+    return lhs.title == rhs.title && lhs.rating == rhs.rating
   }
+  #endif
 }
 
-struct Car {
-  func display() {
-    print("Car display")
-  }
-}
+let movie1 = Movie(title: "타이타닉", rating: 4.9)
+let movie2 = Movie(title: "타이타닉2", rating: 4.1)
 
-enum Hello {
-  case morning
-  
-//  func display() {
-//    print("Hello display")
-//  }
-}
-
-
-//-------
-protocol Displayable {
-  func display()
-}
-
-extension User: Displayable {}
-extension Car: Displayable {}
-extension Hello: Displayable {
-  func display() {
-    print("Hello display")
-  }
-}
-
-let arr: [Displayable] = [ User(), Car(), Hello.morning ]
-for e in arr {
-  e.display()
+// Movie는 동등성 비교를 위한 Equtable을 만족(순응)해야 한다.
+if movie1 == movie2 {
+  print("같은 영화입니다")
 }
