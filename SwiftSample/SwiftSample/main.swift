@@ -62,3 +62,29 @@ let requestBuilder = GithubRequestBuilder()
 let request = requestBuilder.makeRequest(path: "/users")
 print(request)
 
+//------
+enum ResponseError: Error {
+  case invalid
+}
+
+protocol ResponseHandler {
+  func validate(response: URLResponse) throws
+}
+
+extension ResponseHandler {
+  func validate(response: URLResponse) throws {
+    guard response is HTTPURLResponse else {
+      throw ResponseError.invalid
+    }
+  }
+}
+
+struct GithubAPI: RequestBuilder, ResponseHandler {
+  let baseURL = URL(string: "https://api.github.com")!
+}
+
+let api = GithubAPI()
+let request2 = api.makeRequest(path: "/users")
+// api.validate(response: ...)
+
+
