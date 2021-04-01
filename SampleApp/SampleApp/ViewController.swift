@@ -89,6 +89,9 @@ class ViewController: UIViewController {
   var currentTask: URLSessionTask? = nil
   
   func loadImageFromURL(_ url: URL, completion: @escaping (UIImage?, Error?) -> Void) {
+    currentTask?.cancel()
+    currentTask = nil
+    
     let task = URLSession.shared.dataTask(with: url) { (data, response: URLResponse?, error) in
       if let error = error {
         DispatchQueue.main.async { completion(nil, error) }
