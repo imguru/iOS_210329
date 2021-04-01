@@ -86,6 +86,8 @@ class ViewController: UIViewController {
   #endif
   
   // 3. 비동기 - URLSession
+  var currentTask: URLSessionTask? = nil
+  
   func loadImageFromURL(_ url: URL, completion: @escaping (UIImage?, Error?) -> Void) {
     let task = URLSession.shared.dataTask(with: url) { (data, response: URLResponse?, error) in
       if let error = error {
@@ -118,6 +120,7 @@ class ViewController: UIViewController {
       DispatchQueue.main.async { completion(image, nil) }
     }
     
+    currentTask = task
     task.resume()
   }
   
@@ -132,7 +135,9 @@ class ViewController: UIViewController {
     }
   }
   
-  @IBAction func onCancel(_ sender: UIButton) {}
+  @IBAction func onCancel(_ sender: UIButton) {
+    currentTask?.cancel()
+  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
