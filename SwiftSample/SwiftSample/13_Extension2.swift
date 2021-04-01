@@ -1,6 +1,7 @@
 import Foundation
 
 //------------------------------------------
+// https://github.com/onevcat/Kingfisher/blob/master/Sources/General/Kingfisher.swift
 public struct KingfisherWrapper<Base> {
   public let base: Base
   public init(_ base: Base) {
