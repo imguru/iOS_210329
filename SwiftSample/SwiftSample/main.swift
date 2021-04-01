@@ -129,8 +129,7 @@ struct TestSession: Session {
 
 #if true
 // let api = GithubAPI(session: URLSession.shared)
-let api = GithubAPI(session: TestSession())
-
+let api = GithubAPI(session: TestSession())  // Test Double(Stub)
 
 api.getJSON { result in
   switch result {
