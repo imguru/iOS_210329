@@ -39,6 +39,9 @@
                                 <state key="normal" title="불러오기">
                                     <color key="titleColor" systemColor="labelColor"/>
                                 </state>
+                                <connections>
+                                    <action selector="onLoad:" destination="BYZ-38-t0r" eventType="touchUpInside" id="hee-rF-1Yx"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oUa-Cc-T55">
                                 <rect key="frame" x="0.0" y="571" width="375" height="48"/>
@@ -50,6 +53,9 @@
                                 <state key="normal" title="취소하기">
                                     <color key="titleColor" systemColor="labelColor"/>
                                 </state>
+                                <connections>
+                                    <action selector="onCancel:" destination="BYZ-38-t0r" eventType="touchUpInside" id="KDL-hA-Sni"/>
+                                </connections>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -68,10 +74,14 @@
                             <constraint firstItem="oUa-Cc-T55" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="yvn-RK-j9D"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="imageView" destination="1jP-BH-RTp" id="jmT-Rf-RKb"/>
+                        <outlet property="timeLabel" destination="TU1-BZ-bXY" id="UCA-tx-mRK"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-959.20000000000005" y="-218.1409295352324"/>
+            <point key="canvasLocation" x="-1417" y="-289"/>
         </scene>
     </scenes>
     <resources>
