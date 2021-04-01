@@ -1,25 +1,59 @@
 
 import Foundation
 
-protocol Base {
-  // func foo() - 명세가 존재하는 경우: 동적 바인딩
-               // 명세가 존재하지 않을 경우: 정적 바인딩
+#if false
+struct User: Decodable, Encodable {
+  let login: String
+  let id: Int
+  let avatarUrl: String
+}
+#endif
+
+struct User: Codable {
+  let login: String
+  let id: Int
+  let avatarUrl: String
 }
 
-extension Base {
-  func foo() {
-    print("Base foo")
+struct GithubAPI {
+  let session: URLSession
+
+  init(session: URLSession) {
+    self.session = session
+  }
+
+  func getJSON(completion: @escaping (Result<Data, Error>) -> Void) {
+    let url = URL(string: "https://api.github.com/users/apple")!
+
+    let task = session.dataTask(with: url) { data, _, error in
+      if let error = error {
+        completion(.failure(error))
+      } else if let data = data {
+        completion(.success(data))
+      } else {
+        fatalError()
+      }
+    }
+    task.resume()
   }
 }
 
-struct Derivied: Base {
-  func foo() {
-    print("Dervied foo")
+let api = GithubAPI(session: URLSession.shared)
+api.getJSON { result in
+  switch result {
+  case let .success(data):
+    let decoder = JSONDecoder()
+    decoder.keyDecodingStrategy = .convertFromSnakeCase
+
+    if let user = try? decoder.decode(User.self, from: data) {
+      print(user)
+    } else {
+      print("JSON decoding failed")
+    }
+
+  case let .failure(error):
+    print(error)
   }
 }
 
-// 정적 바인딩: 참조 타입에 기반해서 함수를 호출한다. - 컴파일 타임
-// 동적 바인딩(디스패치): 실제 참조하고 있는 객체의 타입에 기반해서 함수를 호출한다. - 실행 시간
-let p: Base = Derivied()
-p.foo()
-
+sleep(1)
