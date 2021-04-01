@@ -26,6 +26,10 @@ class ViewController: UIViewController {
   #endif
   
   // 2. 비동기 버전 - GCD(Grand Central Dispatch)
+  //  문제점: '취소'가 가능해야 한다.
+  //  해결방법
+  //  - Data를 통해 요청하는 것이 아니라, URLSessionDataTask를 통해 해당 기능을 제공할 수 있습니다.
+  #if false
   func loadImageFromURL(_ url: URL, completion: @escaping (UIImage?, Error?) -> Void) {
     DispatchQueue.global().async {
       guard let data = try? Data(contentsOf: IMAGE_URL) else {
@@ -60,6 +64,7 @@ class ViewController: UIViewController {
       // }
     }
   }
+  #endif
   
   #if false
   @IBAction func onLoad(_ sender: UIButton) {
@@ -79,6 +84,44 @@ class ViewController: UIViewController {
     }
   }
   #endif
+  
+  // 3. 비동기 - URLSession
+  func loadImageFromURL(_ url: URL, completion: @escaping (UIImage?, Error?) -> Void) {
+    let task = URLSession.shared.dataTask(with: url) { (data, response: URLResponse?, error) in
+      if let error = error {
+        completion(nil, error)
+        return
+      }
+      
+      // HTTP protocol
+      //  statusCode: 200..<300 - OK
+      guard let response = response as? HTTPURLResponse else {
+        completion(nil, NSError(domain: "Invalid response", code: 100, userInfo: [:]))
+        return
+      }
+      
+      guard 200 ..< 300 ~= response.statusCode else {
+        completion(nil, NSError(domain: "Failed - statusCode: \(response.statusCode)", code: 101, userInfo: [:]))
+        return
+      }
+      
+      guard let data = data else {
+        completion(nil, NSError(domain: "Empty data", code: 101, userInfo: [:]))
+        return
+      }
+      
+      guard let image = UIImage(data: data) else {
+        completion(nil, NSError(domain: "Invalid data", code: 101, userInfo: [:]))
+        return
+      }
+      
+      completion(image, nil)
+    }
+    
+    task.resume()
+  }
+  
+  @IBAction func onLoad(_ sender: UIButton) {}
   
   @IBAction func onCancel(_ sender: UIButton) {}
   
