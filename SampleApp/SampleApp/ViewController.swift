@@ -89,39 +89,48 @@ class ViewController: UIViewController {
   func loadImageFromURL(_ url: URL, completion: @escaping (UIImage?, Error?) -> Void) {
     let task = URLSession.shared.dataTask(with: url) { (data, response: URLResponse?, error) in
       if let error = error {
-        completion(nil, error)
+        DispatchQueue.main.async { completion(nil, error) }
         return
       }
       
       // HTTP protocol
       //  statusCode: 200..<300 - OK
       guard let response = response as? HTTPURLResponse else {
-        completion(nil, NSError(domain: "Invalid response", code: 100, userInfo: [:]))
+        DispatchQueue.main.async { completion(nil, NSError(domain: "Invalid response", code: 100, userInfo: [:])) }
         return
       }
       
       guard 200 ..< 300 ~= response.statusCode else {
-        completion(nil, NSError(domain: "Failed - statusCode: \(response.statusCode)", code: 101, userInfo: [:]))
+        DispatchQueue.main.async { completion(nil, NSError(domain: "Failed - statusCode: \(response.statusCode)", code: 101, userInfo: [:])) }
         return
       }
       
       guard let data = data else {
-        completion(nil, NSError(domain: "Empty data", code: 101, userInfo: [:]))
+        DispatchQueue.main.async { completion(nil, NSError(domain: "Empty data", code: 101, userInfo: [:])) }
         return
       }
       
       guard let image = UIImage(data: data) else {
-        completion(nil, NSError(domain: "Invalid data", code: 101, userInfo: [:]))
+        DispatchQueue.main.async { completion(nil, NSError(domain: "Invalid data", code: 101, userInfo: [:])) }
         return
       }
       
-      completion(image, nil)
+      DispatchQueue.main.async { completion(image, nil) }
     }
     
     task.resume()
   }
   
-  @IBAction func onLoad(_ sender: UIButton) {}
+  @IBAction func onLoad(_ sender: UIButton) {
+    loadImageFromURL(IMAGE_URL) { image, error in
+      if let error = error {
+        print("error - \(error)")
+        return
+      }
+            
+      self.imageView.image = image
+    }
+  }
   
   @IBAction func onCancel(_ sender: UIButton) {}
   
