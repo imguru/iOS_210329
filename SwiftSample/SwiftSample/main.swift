@@ -25,7 +25,9 @@ extension KingfisherWrapper {
 
 //---------------------------------------------
 
-@objc class UIButton: NSObject {}
+@objc class UIButton: NSObject {
+  var name: String = "UIButton"
+}
 let button = UIButton()
 button.kf.display()
 
