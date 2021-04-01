@@ -85,8 +85,31 @@ class ViewController: UIViewController {
   }
   #endif
   
+  /*
+   // 동기
+   let r1 = a()
+   let r2 = b()
+   c(r1, r2)
+   
+   // 비동기
+   a { r1 in
+     b { r2 in
+       c(r1, r2) {
+   
+       }
+     }
+   }
+  
+  
+   */
+  
   // 3. 비동기 - URLSession
-  var currentTask: URLSessionTask? = nil
+  //   문제점: 비동기는 흐름 제어가 어렵습니다.
+  //   해결방법
+  //    => http://reactivex.io/
+  //    => RxSwift(Reactive Extension)
+  //     RxJava, RxJS ....
+  var currentTask: URLSessionTask?
   
   func loadImageFromURL(_ url: URL, completion: @escaping (UIImage?, Error?) -> Void) {
     currentTask?.cancel()
@@ -129,6 +152,22 @@ class ViewController: UIViewController {
   
   @IBAction func onLoad(_ sender: UIButton) {
     loadImageFromURL(IMAGE_URL) { image, error in
+      self.loadImageFromURL(IMAGE_URL) { image, error in
+        self.loadImageFromURL(IMAGE_URL) { image, error in
+          if let error = error {
+            print("error - \(error)")
+            return
+          }
+            
+          self.imageView.image = image
+        }
+      }
+    }
+  }
+  
+  #if false
+  @IBAction func onLoad(_ sender: UIButton) {
+    loadImageFromURL(IMAGE_URL) { image, error in
       if let error = error {
         print("error - \(error)")
         return
@@ -137,6 +176,7 @@ class ViewController: UIViewController {
       self.imageView.image = image
     }
   }
+  #endif
   
   @IBAction func onCancel(_ sender: UIButton) {
     currentTask?.cancel()
