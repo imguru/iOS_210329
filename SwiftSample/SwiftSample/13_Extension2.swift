@@ -18,7 +18,7 @@ extension KingfisherCompatible {
 }
 
 extension UIButton: KingfisherCompatible { }
-extension KingfisherWrapper {
+extension KingfisherWrapper where Self == UIButton {
   func display() {
       print("UIButton KF display")
   }
