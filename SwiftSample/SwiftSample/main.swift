@@ -21,6 +21,8 @@ func load(url: String, completion: (Result<String, Never>) -> Void) {}
 
 // Never 용도: Never는 객체 생성이 불가능한 타입입니다.
 // - 함수의 반환이 발생하지 않는다.
+// - Result에서 절대 실패하지 않는 연산을 표현할 때 사용할 수 있다.
+
 func foo() -> Never {
     fatalError("xxx")
 }
