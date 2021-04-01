@@ -76,7 +76,7 @@ protocol DataTask {
 
 protocol Session {
   associatedtype Task: DataTask
-  
+
   func dataTask(with url: URL, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> Task
 }
 
@@ -106,7 +106,32 @@ struct GithubAPI<S: Session> {
 extension URLSession: Session {}
 extension URLSessionDataTask: DataTask {}
 
-let api = GithubAPI(session: URLSession.shared)
+// Test를 위한 Session을 제공하자.
+struct TestTask: DataTask {
+  let completion: (Data?, URLResponse?, Error?) -> Void
+
+  func resume() {
+    let testData = User(login: "test_login", id: 0, avatarUrl: "", company: nil)
+
+    let encoder = JSONEncoder()
+    encoder.keyEncodingStrategy = .convertToSnakeCase
+
+    let data = try! encoder.encode(testData)
+    completion(data, nil, nil)
+  }
+}
+
+struct TestSession: Session {
+  func dataTask(with url: URL, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> TestTask {
+    return TestTask(completion: completionHandler)
+  }
+}
+
+#if true
+// let api = GithubAPI(session: URLSession.shared)
+let api = GithubAPI(session: TestSession())
+
+
 api.getJSON { result in
   switch result {
   case let .success(data):
@@ -125,3 +150,4 @@ api.getJSON { result in
 }
 
 sleep(1)
+#endif
