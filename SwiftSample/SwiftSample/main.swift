@@ -1,152 +1,76 @@
 
 import Foundation
 
-// JSON
-// {
-//    "avatarUrl": "xxx"   // Default
-//    "avatar_url": "xxx"  // convertFromSnakeCase
-// }
-
-// Swift - "Dependency Injection"
-//       => Testability - 테스트 용이성
-
+// 다형성
+//  - 상속
 #if false
-struct User: Decodable, Encodable {
-  let login: String
-  let id: Int
-  let avatarUrl: String
+class Displayble {
+  func display() {}
+}
+
+class User: Displayble {
+  override func display() {
+    print("User display")
+  }
+}
+
+class Car: Displayble {
+  override func display() {
+    print("Car display")
+  }
+}
+
+let arr: [Displayble] = [
+  User(),
+  Car(),
+]
+for e in arr {
+  e.display()
 }
 #endif
 
-struct User: Codable {
-  let login: String
-  let id: Int
-  let avatarUrl: String
-  let company: String?
-}
+// Duck(오리) Typing 설계
+//  => 동일한 행위를 가지고 있는 객체를 대상으로 다형성을 구현할 수 있다.
+//  - Javasciprt / Ruby / Python
+//  문제점: 해당 기능을 제공하지 않을 경우 런타임에 오류가 발생한다.
+//
+//  스위프트는 protocol / extension을 통해서 해당 기능을 안전하게 구현할 수 있습니다.
 
-#if false
-struct GithubAPI {
-  let session: URLSession
-
-  init(session: URLSession) {
-    self.session = session
-  }
-
-  func getJSON(completion: @escaping (Result<Data, Error>) -> Void) {
-    let url = URL(string: "https://api.github.com/users/JakeWharton")!
-
-    let task = session.dataTask(with: url) { data, _, error in
-      if let error = error {
-        completion(.failure(error))
-      } else if let data = data {
-        completion(.success(data))
-      } else {
-        fatalError()
-      }
-    }
-    task.resume()
+class User {
+  func display() {
+    print("User display")
   }
 }
 
-let api = GithubAPI(session: URLSession.shared)
-api.getJSON { result in
-  switch result {
-  case let .success(data):
-    let decoder = JSONDecoder()
-    decoder.keyDecodingStrategy = .convertFromSnakeCase
-
-    if let user = try? decoder.decode(User.self, from: data) {
-      print(user)
-    } else {
-      print("JSON decoding failed")
-    }
-
-  case let .failure(error):
-    print(error)
+struct Car {
+  func display() {
+    print("Car display")
   }
 }
 
-sleep(1)
-#endif
-
-protocol DataTask {
-  func resume()
+enum Hello {
+  case morning
+  
+//  func display() {
+//    print("Hello display")
+//  }
 }
 
-protocol Session {
-  associatedtype Task: DataTask
 
-  func dataTask(with url: URL, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> Task
+//-------
+protocol Displayable {
+  func display()
 }
 
-struct GithubAPI<S: Session> {
-  let session: S
-
-  init(session: S) {
-    self.session = session
-  }
-
-  func getJSON(completion: @escaping (Result<Data, Error>) -> Void) {
-    let url = URL(string: "https://api.github.com/users/JakeWharton")!
-
-    let task = session.dataTask(with: url) { data, _, error in
-      if let error = error {
-        completion(.failure(error))
-      } else if let data = data {
-        completion(.success(data))
-      } else {
-        fatalError()
-      }
-    }
-    task.resume()
+extension User: Displayable {}
+extension Car: Displayable {}
+extension Hello: Displayable {
+  func display() {
+    print("Hello display")
   }
 }
 
-extension URLSession: Session {}
-extension URLSessionDataTask: DataTask {}
-
-// Test를 위한 Session을 제공하자.
-struct TestTask: DataTask {
-  let completion: (Data?, URLResponse?, Error?) -> Void
-
-  func resume() {
-    let testData = User(login: "test_login", id: 0, avatarUrl: "", company: nil)
-
-    let encoder = JSONEncoder()
-    encoder.keyEncodingStrategy = .convertToSnakeCase
-
-    let data = try! encoder.encode(testData)
-    completion(data, nil, nil)
-  }
+let arr: [Displayable] = [ User(), Car(), Hello.morning ]
+for e in arr {
+  e.display()
 }
-
-struct TestSession: Session {
-  func dataTask(with url: URL, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> TestTask {
-    return TestTask(completion: completionHandler)
-  }
-}
-
-#if true
-// let api = GithubAPI(session: URLSession.shared)
-let api = GithubAPI(session: TestSession())  // Test Double(Stub)
-
-api.getJSON { result in
-  switch result {
-  case let .success(data):
-    let decoder = JSONDecoder()
-    decoder.keyDecodingStrategy = .convertFromSnakeCase
-
-    if let user = try? decoder.decode(User.self, from: data) {
-      print(user)
-    } else {
-      print("JSON decoding failed")
-    }
-
-  case let .failure(error):
-    print(error)
-  }
-}
-
-sleep(1)
-#endif
