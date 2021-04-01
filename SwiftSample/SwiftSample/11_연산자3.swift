@@ -17,6 +17,7 @@ let faces = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"]
 // Array<String> -> map        -> Array<Array<Tuple>>
 
 #if false
+// Array<String> -> map -> Array<Array<(String, String)>>
 let deck = suits.map { suit in
   faces.map { face in
     (suit, face)
@@ -40,6 +41,8 @@ let info = [
 let path: String? = info["url"]
 // String -> URL
 
+
+// String -> Optional<URL>
 // Optional<String> -> map -> Optional<Optional<URL>>
 let url = path.map { URL(string: $0) }
 print(type(of: url))
@@ -60,7 +63,6 @@ let strings = [
 // - 예전 이름이 flatMap 이었습니다. : deprecated
 
 // compactMap: Optional의 결과에서 nil을 제거하고, 실제 Wrapped 타입으로 결과를 변환합니다.
-
 
 #if false
 let urls = strings.compactMap {

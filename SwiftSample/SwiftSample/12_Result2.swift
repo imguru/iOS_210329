@@ -81,7 +81,7 @@ func searchUsers(q: String, completion: @escaping (Result<JSON, SearchResultErro
       .mapError { (error: NetworkError) -> SearchResultError in // Result<Data, SearchResultError>
         .networkError(error)
       }
-      .flatMap { (data: Data) -> Result<JSON, SearchResultError> in
+      .flatMap { (data: Data) -> Result<JSON, SearchResultError> in  // Data -> Result<JSON, SearchResultError>
 
         if let json = try? JSONSerialization.jsonObject(with: data, options: []),
            let jsonDic = json as? JSON
