@@ -7,7 +7,6 @@ class ViewController: UIViewController {
   @IBOutlet var imageView: UIImageView!
   @IBOutlet var timeLabel: UILabel!
   
-
   // 1. 동기 버전
   //   문제점: UI 스레드에서 오래 걸리는 작업을 수행하면 UI의 업데이트가 멈추는 문제가 발생합니다.
   //   해결방법
@@ -27,6 +26,42 @@ class ViewController: UIViewController {
   #endif
   
   // 2. 비동기 버전 - GCD(Grand Central Dispatch)
+  func loadImageFromURL(_ url: URL, completion: @escaping (UIImage?, Error?) -> Void) {
+    DispatchQueue.global().async {
+      guard let data = try? Data(contentsOf: IMAGE_URL) else {
+        DispatchQueue.main.async {
+          completion(nil, NSError(domain: "Invalid URL", code: 100, userInfo: [:]))
+        }
+        return
+      }
+      
+      guard let image = UIImage(data: data) else {
+        DispatchQueue.main.async {
+          completion(nil, NSError(domain: "Invalid Image Data", code: 101, userInfo: [:]))
+        }
+        return
+      }
+      
+      DispatchQueue.main.async {
+        completion(image, nil)
+      }
+    }
+  }
+  
+  @IBAction func onLoad(_ sender: UIButton) {
+    loadImageFromURL(IMAGE_URL) { image, error in
+      if let error = error {
+        print("error - \(error)")
+        return
+      }
+            
+      // DispatchQueue.main.async {
+      self.imageView.image = image
+      // }
+    }
+  }
+  
+  #if false
   @IBAction func onLoad(_ sender: UIButton) {
     DispatchQueue.global().async {
       guard let data = try? Data(contentsOf: IMAGE_URL) else {
@@ -43,8 +78,7 @@ class ViewController: UIViewController {
       }
     }
   }
-  
-  
+  #endif
   
   @IBAction func onCancel(_ sender: UIButton) {}
   
