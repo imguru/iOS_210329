@@ -98,3 +98,5 @@ extension Collection where Element == Article {
     }
   }
 }
+
+// Extension에 제약을 사용함으로 써, 특정 타입에 대해서만 기능을 추가하는 것이 가능합니다.
