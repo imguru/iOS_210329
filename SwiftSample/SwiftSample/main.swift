@@ -82,6 +82,7 @@ struct PCGame: Game {
   }
 }
 
+// PAT 기반 프로토콜에 대해서 런타임 다형성이 필요한 경우
 struct AnyGame: Game {
   private let _start: () -> Void // start
   private let _hashable: AnyHashable
@@ -90,6 +91,7 @@ struct AnyGame: Game {
     _start()
   }
 
+  // 타입 소거형 객체 타입
   init<T: Game>(_ game: T) {
     _hashable = game
     _start = game.start
