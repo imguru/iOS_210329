@@ -310,7 +310,23 @@ class ViewController: UIViewController {
     }
   }
   
-  @IBAction func onLoad(_ sender: UIButton) {}
+  @IBAction func onLoad(_ sender: UIButton) {
+  
+    _ = getData(url: IMAGE_URL)
+      .subscribe { (event :Event<Data>) in
+        switch event {
+        case let .next(data):
+          print("onNext: \(data)")
+        case let .error(error):
+          print("onError: \(error)")
+        case .completed:
+          print("onComplete")
+        }
+      }
+    
+    
+    
+  }
   
   @IBAction func onCancel(_ sender: UIButton) {}
   
