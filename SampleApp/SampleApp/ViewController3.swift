@@ -3,6 +3,97 @@ import RxCocoa
 import RxSwift
 import UIKit
 
+struct SignInViewModel {
+  let email = BehaviorSubject<String>(value: "")
+  let password = BehaviorSubject<String>(value: "")
+  
+  let disposeBag = DisposeBag()
+  
+  lazy var emailIsValid: Driver<Bool> = {
+    email
+      .asDriver(onErrorJustReturn: "")
+      .map { email -> Bool in
+        email.count >= 5 && email.contains("@")
+      }
+  }()
+  
+  lazy var passwordIsValid: Driver<Bool> = {
+    password
+      .asDriver(onErrorJustReturn: "")
+      .map { password -> Bool in
+        password.count >= 6
+      }
+  }()
+  
+  lazy var isLoginButtonEnabled: Driver<Bool> = {
+    Driver.combineLatest(emailIsValid, passwordIsValid)
+      .map { (emailIsValid, passwordIsValid) -> Bool in
+        emailIsValid && passwordIsValid
+      }
+  }()
+  
+  lazy var keyboardHeight: Observable<CGFloat> = {
+    let keyboardWillShowNotification = NotificationCenter.default.rx.notification(UIResponder.keyboardWillShowNotification)
+      .compactMap { notificaton -> CGFloat? in
+        (notificaton.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height
+      }
+    
+    let keyboardWillHideNotification = NotificationCenter.default.rx.notification(UIResponder.keyboardWillHideNotification)
+      .map { _ -> CGFloat in
+        0
+      }
+    
+    return Observable.merge([keyboardWillShowNotification, keyboardWillHideNotification])
+  }()
+}
+
+class ViewController3: UIViewController {
+  @IBOutlet var emailField: UITextField!
+  @IBOutlet var passwordField: UITextField!
+
+  @IBOutlet var loginButton: UIButton!
+  @IBOutlet var bottomMargin: NSLayoutConstraint!
+  
+  var viewModel = SignInViewModel()
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    
+    // emailField.text -> viewModel.email
+    emailField.rx.text
+      .asDriver()
+      .compactMap { $0 }
+      .drive(viewModel.email)
+      .disposed(by: viewModel.disposeBag)
+    
+    // passwordField.text -> viewModel.password
+    passwordField.rx.text
+      .asDriver()
+      .compactMap { $0 }
+      .drive(viewModel.password)
+      .disposed(by: viewModel.disposeBag)
+    
+  
+    // viewModel.isLoginButtonEnabled -> loginButton.isEnabled
+    viewModel.isLoginButtonEnabled
+      .drive(loginButton.rx.isEnabled)
+      .disposed(by: viewModel.disposeBag)
+    
+    // viewModel.keyboardHeight -> bottomMargin.constant
+    viewModel.keyboardHeight
+      .map { $0 + 16 }
+      .bind(to: bottomMargin.rx.constant)
+      .disposed(by: viewModel.disposeBag)
+  }
+  
+  override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    view.endEditing(true)
+  }
+}
+
+// -----------
+
+#if false
 class ViewController3: UIViewController {
   @IBOutlet var emailField: UITextField!
   @IBOutlet var passwordField: UITextField!
@@ -26,8 +117,12 @@ class ViewController3: UIViewController {
     return Observable.merge([keyboardWillShowNotification, keyboardWillHideNotification])
   }
   
+  // Observable 기반 입니다.
   let email = BehaviorSubject<String>(value: "")
   let password = BehaviorSubject<String>(value: "")
+  
+  // let email = BehaviorRelay<String>(value: "")
+  // let password = BehaviorRelay<String>(value: "")
   
   // Data Binding
   // 1. Observable
@@ -190,3 +285,4 @@ class ViewController3: UIViewController {
     view.endEditing(true)
   }
 }
+#endif
