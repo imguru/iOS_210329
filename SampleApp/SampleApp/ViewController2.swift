@@ -130,6 +130,8 @@ class ViewController2: UIViewController {
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
 
+    // - 아래처럼 접근하는 것은 좋지 않습니다.
+    // var disposeBag = Disposebag()
     // disposeBag = DisposeBag()
   }
   #endif
@@ -153,11 +155,8 @@ class ViewController2: UIViewController {
         print("onComplete")
       })
       .disposed(by: disposeBag)
-    
-    
   }
 }
-
 
 struct User: Decodable {
   let login: String
@@ -175,25 +174,48 @@ struct SearchUserResponse: Decodable {
   let items: [User]
 }
 
+func getUser(login: String) -> Observable<User> {
+  let url = URL(string: "https://api.github.com/users/\(login)")!
+
+  let decoder = JSONDecoder()
+  decoder.keyDecodingStrategy = .convertFromSnakeCase
+
+  return getData(url: url)
+    .compactMap { (data) -> User? in
+      try? decoder.decode(User.self, from: data)
+    }
+}
+
+ func searchUser(login: String) -> Observable<SearchUserResponse> {
+  let url = URL(string: "https://api.github.com/search/users?q=\(login)")!
+
+  let decoder = JSONDecoder()
+  decoder.keyDecodingStrategy = .convertFromSnakeCase
+
+  return getData(url: url)
+    .compactMap { (data) -> SearchUserResponse? in
+      try? decoder.decode(SearchUserResponse.self, from: data)
+    }
+ }
 
 func getData(url: URL) -> Observable<Data> {
   return Observable.create { observer -> Disposable in
-    
+
     let task = URLSession.shared.dataTask(with: url) { data, _, error in
       if let error = error {
         observer.onError(error)
         return
       }
-      
+
       guard let data = data else {
         observer.onError(NSError(domain: "Invalid data(null)", code: 100, userInfo: [:]))
         return
       }
-      
+
       observer.onNext(data)
       observer.onCompleted()
     }
-    
+
     task.resume()
     return Disposables.create {
       task.cancel()
