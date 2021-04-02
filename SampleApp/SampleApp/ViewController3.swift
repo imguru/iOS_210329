@@ -76,7 +76,6 @@ class ViewController3: UIViewController {
       .drive(viewModel.password)
       .disposed(by: viewModel.disposeBag)
     
-  
     // viewModel.isLoginButtonEnabled -> loginButton.isEnabled
     viewModel.isLoginButtonEnabled
       .asDriver(onErrorJustReturn: false)
@@ -87,6 +86,20 @@ class ViewController3: UIViewController {
     viewModel.keyboardHeight
       .map { $0 + 16 }
       .bind(to: bottomMargin.rx.constant)
+      .disposed(by: viewModel.disposeBag)
+    
+    loginButton.rx.tap
+      .flatMapLatest { [weak self] _ -> Observable<User> in
+        guard let self = self else {
+          return Observable.empty()
+        }
+        return self.viewModel.login()
+      }
+      .subscribe(onNext: { user in
+        print("Login 성공: \(user)")
+      }, onError: { error in
+        print("Login 실패: \(error)")
+      })
       .disposed(by: viewModel.disposeBag)
   }
   
