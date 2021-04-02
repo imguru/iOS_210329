@@ -17,6 +17,10 @@ import RxRelay
 //            RxCocoa에 대한 의존성이 존재하면 안됩니다.
 //            => Driver(UI 스레드)
 // Model
+
+// View
+//  : Controller  <-> ViewModel <-> Model
+
 struct SignInViewModel {
   // Subject vs Relay
   //   - Subject는 .completed / .error의 이벤트 발생하면 이벤트 스트림이 종료됩니다.
@@ -63,4 +67,13 @@ struct SignInViewModel {
     
     return Observable.merge([keyboardWillShowNotification, keyboardWillHideNotification])
   }()
+  
+  func login() -> Observable<User> {
+    return Observable.combineLatest(email, password)
+      .flatMap { (_, _) -> Observable<User> in
+        Observable.just(User(login: "test", id: 0, avatarUrl: "", name: nil, location: nil))
+      }
+  }
+  
+  
 }
