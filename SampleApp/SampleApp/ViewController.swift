@@ -313,10 +313,15 @@ class ViewController: UIViewController {
   @IBAction func onLoad(_ sender: UIButton) {
   
     _ = getData(url: IMAGE_URL)
+      .observe(on: MainScheduler.instance)
       .subscribe { (event :Event<Data>) in
         switch event {
         case let .next(data):
           print("onNext: \(data)")
+          if let image = UIImage(data: data) {
+            self.imageView.image = image
+          }
+          
         case let .error(error):
           print("onError: \(error)")
         case .completed:
