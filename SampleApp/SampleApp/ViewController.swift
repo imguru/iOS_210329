@@ -254,7 +254,18 @@ class ViewController: UIViewController {
     }
   }
   
-  @IBAction func onLoad(_ sender: UIButton) {}
+  @IBAction func onLoad(_ sender: UIButton) {
+    let observable = loadImageFromURL(IMAGE_URL)
+    
+    _ = observable
+      .subscribe(onNext: { image in
+        print("onNext: \(image)")
+      }, onError: { error in
+        print("onError: \(error)")
+      }, onCompleted: {
+        print("onComplete")
+      })
+  }
   
   @IBAction func onCancel(_ sender: UIButton) {}
   
