@@ -146,6 +146,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="bottomMargin" destination="LaC-Fp-EWe" id="Szx-5J-XYD"/>
                         <outlet property="emailField" destination="Tqj-k5-2FL" id="dMZ-kX-dEI"/>
                         <outlet property="loginButton" destination="GQC-zu-dy8" id="KTR-1W-j4c"/>
                         <outlet property="passwordField" destination="OVN-So-nF2" id="Sgt-P9-xz5"/>
