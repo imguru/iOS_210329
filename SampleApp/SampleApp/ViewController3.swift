@@ -26,23 +26,59 @@ class ViewController3: UIViewController {
     return Observable.merge([keyboardWillShowNotification, keyboardWillHideNotification])
   }
   
+  let email = BehaviorSubject<String>(value: "")
+  let password = BehaviorSubject<String>(value: "")
+  
   override func viewDidLoad() {
     super.viewDidLoad()
-
+    
+    // emailField.text -> email
+    emailField.rx.text
+      .compactMap { $0 }
+      .bind(to: email)
+      .disposed(by: disposeBag)
+    
+    // passwordField.text -> password
+    passwordField.rx.text
+      .compactMap { $0 }
+      .bind(to: password)
+      .disposed(by: disposeBag)
+    
+    let emailIsValid = email
+      .map { email -> Bool in
+        email.count >= 5 && email.contains("@")
+      }
+    
+    let passwordIsValid = password
+      .map { password -> Bool in
+        password.count >= 6
+      }
+    
+    let isLoginButtonEnabled = Observable.combineLatest(emailIsValid, passwordIsValid)
+      .map { (emailIsValid, passwordIsValid) -> Bool in
+        emailIsValid && passwordIsValid
+      }
+    
+    isLoginButtonEnabled.subscribe(onNext: { b in
+      self.loginButton.isEnabled = b
+    })
+    .disposed(by: disposeBag)
+    
+    
+    
     keyboardHeight()
       .map { $0 + 16 }
       .bind(to: bottomMargin.rx.constant)
       .disposed(by: disposeBag)
     
     /*
-    keyboardHeight()
-      .subscribe(onNext: { [weak self] height in
-        self?.bottomMargin.constant = 16 + height
-      })
-      .disposed(by: disposeBag)
-    */
+     keyboardHeight()
+       .subscribe(onNext: { [weak self] height in
+         self?.bottomMargin.constant = 16 + height
+       })
+       .disposed(by: disposeBag)
+     */
       
-    
     #if false
     // Do any additional setup after loading the view.
     NotificationCenter.default.rx.notification(UIResponder.keyboardWillShowNotification)
