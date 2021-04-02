@@ -311,10 +311,33 @@ class ViewController: UIViewController {
   }
   
   @IBAction func onLoad(_ sender: UIButton) {
-  
+    _ = getData(url: IMAGE_URL)              // Data
+      .map { (data: Data) -> UIImage? in      // Data -> UIImage?
+        UIImage(data: data)
+      }
+      .filter{ (image: UIImage?) -> Bool in   // nil이면 여기서 끝납니다.
+        image != nil
+      }
+      .map { (image: UIImage?) -> UIImage in  // UIImage? -> UIImage
+        image!
+      }
+      .observe(on: MainScheduler.instance)
+      .subscribe { event in
+        switch event {
+        case let .next(data):
+          print("onNext: \(data)")
+          self.imageView.image = data
+        case let .error(error):
+          print("onError: \(error)")
+        case .completed:
+          print("onComplete")
+        }
+      }
+    
+    #if false
     _ = getData(url: IMAGE_URL)
       .observe(on: MainScheduler.instance)
-      .subscribe { (event :Event<Data>) in
+      .subscribe { (event: Event<Data>) in
         switch event {
         case let .next(data):
           print("onNext: \(data)")
@@ -328,9 +351,7 @@ class ViewController: UIViewController {
           print("onComplete")
         }
       }
-    
-    
-    
+    #endif
   }
   
   @IBAction func onCancel(_ sender: UIButton) {}
