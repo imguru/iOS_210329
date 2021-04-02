@@ -166,6 +166,29 @@ class ViewController2: UIViewController {
 
     // errors
     // let errros = PublishSubject<Error>()
+    
+    
+    #if false
+    errros
+      .observe(on: MainScheduler.instance)
+      .map({ error -> String in
+        error.localizedDescription
+      })
+      .subscribe(onNext: { [weak self] message in     // Observable<String>
+        self?.errorLabel.text = message
+      })
+      .disposed(by: disposeBag)
+    #endif
+    
+    errros
+      .observe(on: MainScheduler.instance)
+      .map({ error -> String in
+        error.localizedDescription
+      })
+      .bind(to: errorLabel.rx.text)
+      .disposed(by: disposeBag)
+    
+    #if false
     errros
       .observe(on: MainScheduler.instance)
       .subscribe(onNext: { [weak self] error in
@@ -173,9 +196,10 @@ class ViewController2: UIViewController {
         print(error.localizedDescription)
       })
       .disposed(by: disposeBag)
+    #endif
 
     searchBar.rx.text
-      .throttle(.seconds(2), latest: true, scheduler: MainScheduler.instance)
+      // .throttle(.seconds(2), latest: true, scheduler: MainScheduler.instance)
       .compactMap { text -> String? in
         guard let text = text, text.count >= 3 else {
           return nil
