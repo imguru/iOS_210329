@@ -226,6 +226,7 @@ class ViewController: UIViewController {
 
   // UIImage
   // (completion: @escaping (UIImage?, Error?) -> Void) => Observable<UIImage>
+  #if false
   func loadImageFromURL(_ url: URL) -> Observable<UIImage> {
     return Observable.create { observer -> Disposable in
       
@@ -259,12 +260,12 @@ class ViewController: UIViewController {
     }
   }
   
-  var disposable: Disposable? = nil
+  var disposable: Disposable?
   @IBAction func onLoad(_ sender: UIButton) {
     let observable = loadImageFromURL(IMAGE_URL)
     
     disposable = observable
-      .observe(on: MainScheduler.instance)  // Main Thread
+      .observe(on: MainScheduler.instance) // Main Thread
       .subscribe(onNext: { image in
         print("onNext: \(image)")
         
@@ -280,6 +281,38 @@ class ViewController: UIViewController {
   @IBAction func onCancel(_ sender: UIButton) {
     disposable?.dispose()
   }
+  #endif
+  
+  // 5. RxSwift
+  //    => Operator(연산자)
+  func getData(url: URL) -> Observable<Data> {
+    return Observable.create { observer -> Disposable in
+      
+      let task = URLSession.shared.dataTask(with: url) { data, _, error in
+        if let error = error {
+          observer.onError(error)
+          return
+        }
+        
+        guard let data = data else {
+          observer.onError(NSError(domain: "Invalid data(null)", code: 100, userInfo: [:]))
+          return
+        }
+        
+        observer.onNext(data)
+        observer.onCompleted()
+      }
+      
+      task.resume()
+      return Disposables.create {
+        task.cancel()
+      }
+    }
+  }
+  
+  @IBAction func onLoad(_ sender: UIButton) {}
+  
+  @IBAction func onCancel(_ sender: UIButton) {}
   
   override func viewDidLoad() {
     super.viewDidLoad()
