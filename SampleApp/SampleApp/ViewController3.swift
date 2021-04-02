@@ -30,10 +30,17 @@ class ViewController3: UIViewController {
     super.viewDidLoad()
 
     keyboardHeight()
+      .map { $0 + 16 }
+      .bind(to: bottomMargin.rx.constant)
+      .disposed(by: disposeBag)
+    
+    /*
+    keyboardHeight()
       .subscribe(onNext: { [weak self] height in
         self?.bottomMargin.constant = 16 + height
       })
       .disposed(by: disposeBag)
+    */
       
     
     #if false
