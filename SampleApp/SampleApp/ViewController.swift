@@ -101,14 +101,15 @@ class ViewController: UIViewController {
    }
    */
   
+  
   // 3. 비동기 - URLSession - Task 기반 병렬 프로그래밍
   //   문제점: 비동기는 흐름 제어가 어렵습니다.
   //   해결방법
   //    => http://reactivex.io/
   //    => RxSwift(Reactive Extension)
   //     RxJava, RxJS ....
+  #if false
   var currentTask: URLSessionTask?
-  
   func loadImageFromURL(_ url: URL, completion: @escaping (UIImage?, Error?) -> Void) {
     currentTask?.cancel()
     currentTask = nil
@@ -163,7 +164,6 @@ class ViewController: UIViewController {
     }
   }
   
-  #if false
   @IBAction func onLoad(_ sender: UIButton) {
     loadImageFromURL(IMAGE_URL) { image, error in
       if let error = error {
@@ -174,11 +174,68 @@ class ViewController: UIViewController {
       self.imageView.image = image
     }
   }
-  #endif
+  
   
   @IBAction func onCancel(_ sender: UIButton) {
     currentTask?.cancel()
   }
+  #endif
+  
+  // 4. RxSwift - Reactive eXtension
+  // http://reactivex.io/
+  // : 비동기 기반의 이벤트 처리 코드를 작성하기 위한 라이브러리 입니다.
+  //   콜백 방식과는 달리 발생하는 이벤트를 이벤트 스트림을 통해 전달하고,
+  //   이벤트 스트림을 관찰하다가 원하는 이벤트를 감지하면 이에 따른 동작을 수행하는 방식을 따릅니다.
+  //  => 비동기 이벤트를 컬렉션을 다루는 일반 적인 방법처럼 처리할 수 있습니다.
+  
+  //    Sequence     <------>    Iterator Protocol
+  //-----------------------------------------------
+  //    Array<int>              func next() -> Element?    => pull
+  //            map/filter/flatMap
+  
+  
+  
+  //   Observable    <------>    Observer
+  //-----------------------------------------------
+  //                            func onNext(Element)      => push
+  //                            func onError(Error)
+  //                            func onComplete()
+  //           map/filter/flatMap...
+  
+  // Rx 요소 5가지
+  // 1. Observable
+  //  : 이벤트를 만들어내는 주체로, 이벤트 스트림을 통해 이벤트를 내보냅니다.
+  //    한개부터 여러개의 이벤트를 만들어 낼 수 있으며, 이벤트를 발생하지 않을 수도 있습니다.
+  
+  // 2. Observer
+  //  : Observable에서 발생한 이벤트에 반응하며, 이벤트를 받았을 때 수행할 작업을 정의합니다.
+  //    onNext / onError / onComplete
+  //   "Observer가 Observable을 구독(subscribe)한다" 라고 합니다.
+  //   => 이 순간 이벤트 스트림이 형성됩니다.
+  
+  // 3. Operator
+  //  : 연산자는 이벤트 스트림을 통해 전달되는 이벤트를 변환하는 작업을 수행합니다.
+  //    단순히 이벤트가 갖고 있는 값을 다른 형태로 넘겨주는 것 뿐 아니라, 특정 조건을 만족하는 이벤트 스트림을 생성하거나, 개수를 변경하거나
+  //    다양한 작업을 수행할 수 있습니다.
+  
+  // 4. Scheduler
+  //   : 작업을 수행할 스레드를 지정할 수 있습니다.
+  //     UI 스레드 / IO 스레드 / 작업 스레드 ...
+  
+  // 5. Disposable
+  //   : Observer가 Observable를 구독할 때 생성되는 객체 입니다.
+  //     Observable에서 만드는 이벤트 스트림과 그에 필요한 리소스를 관리합니다.
+  //     더 이상 이벤트를 필요로 하지 않는 경우, 해당 객체를 통해 구독을 취소할 수 있습니다.
+
+  
+  @IBAction func onLoad(_ sender: UIButton) {
+    
+  }
+  
+  @IBAction func onCancel(_ sender: UIButton) {
+    
+  }
+  
   
   override func viewDidLoad() {
     super.viewDidLoad()
