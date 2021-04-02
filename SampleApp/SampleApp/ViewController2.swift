@@ -180,12 +180,32 @@ class ViewController2: UIViewController {
       .disposed(by: disposeBag)
     #endif
     
+    #if false
     errros
-      .observe(on: MainScheduler.instance)
       .map({ error -> String in
         error.localizedDescription
       })
+      
       .bind(to: errorLabel.rx.text)
+      .disposed(by: disposeBag)
+    #endif
+    
+    // Observable -> Driver : RxSwift에만 있는 기능입니다.
+    //  - subscribe
+    //  - bind
+    
+    // --- RxSwift 전용 개념 ---
+    //  Driver: UI 스레드에서 동작하고, 절대 실패하지 않는다.
+    //  - UI 업데이트하거나 UI를 대상으로만 수행한다.
+    //  - subscribe(onNext: ..) -> drive(onNext: )
+    //    bind(to: ...)         -> drive()
+    // ------------------------
+    errros
+      .asDriver(onErrorJustReturn: NSError())
+      .map({ error -> String in
+        error.localizedDescription
+      })
+      .drive(errorLabel.rx.text)
       .disposed(by: disposeBag)
     
     #if false
