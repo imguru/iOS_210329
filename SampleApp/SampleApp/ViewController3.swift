@@ -29,6 +29,13 @@ class ViewController3: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
+    keyboardHeight()
+      .subscribe(onNext: { [weak self] height in
+        self?.bottomMargin.constant = 16 + height
+      })
+      .disposed(by: disposeBag)
+      
+    
     #if false
     // Do any additional setup after loading the view.
     NotificationCenter.default.rx.notification(UIResponder.keyboardWillShowNotification)
