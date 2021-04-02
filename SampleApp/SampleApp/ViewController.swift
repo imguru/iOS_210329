@@ -311,6 +311,24 @@ class ViewController: UIViewController {
   }
   
   @IBAction func onLoad(_ sender: UIButton) {
+    _ = getData(url: IMAGE_URL)
+      .compactMap { (data: Data) -> UIImage? in
+        UIImage(data: data)
+      }
+      .observe(on: MainScheduler.instance)
+      .subscribe { event in
+        switch event {
+        case let .next(data):
+          print("onNext: \(data)")
+          self.imageView.image = data
+        case let .error(error):
+          print("onError: \(error)")
+        case .completed:
+          print("onComplete")
+        }
+      }
+    
+    #if false
     _ = getData(url: IMAGE_URL)              // Data
       .map { (data: Data) -> UIImage? in      // Data -> UIImage?
         UIImage(data: data)
@@ -333,6 +351,7 @@ class ViewController: UIViewController {
           print("onComplete")
         }
       }
+    #endif
     
     #if false
     _ = getData(url: IMAGE_URL)
