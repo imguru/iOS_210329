@@ -383,10 +383,12 @@ class ViewController: UIViewController {
   //            onNext                   -> imageView.image = image
   
   struct User: Decodable {
+    let id: Int
     let login: String
     let avatarUrl: String
   }
   
+  #if false
   @IBAction func onLoad(_ sender: UIButton) {
     let userUrl = URL(string: "https://api.github.com/users/apple")!
     
@@ -400,7 +402,47 @@ class ViewController: UIViewController {
       .compactMap { user -> URL? in                    // Observable<User> -> Observable<URL>
         URL(string: user.avatarUrl)
       }
-      .flatMap { (imageUrl) -> Observable<Data> in         // Observable<URL>  -> Observable<Observable<Data>> -> Observable<Data>
+      .flatMap { (imageUrl) -> Observable<Data> in     // Observable<URL>  -> Observable<Observable<Data>> -> Observable<Data>
+        self.getData(url: imageUrl)
+      }
+      .compactMap { data -> UIImage? in
+        UIImage(data: data)
+      }
+      .observe(on: MainScheduler.instance)
+      .subscribe(onNext: { image in
+        self.imageView.image = image
+      })
+  }
+  #endif
+  
+  @IBAction func onLoad(_ sender: UIButton) {
+    let appleUrl = URL(string: "https://api.github.com/users/apple")!
+    let googleUrl = URL(string: "https://api.github.com/users/google")!
+    
+    let decoder = JSONDecoder()
+    decoder.keyDecodingStrategy = .convertFromSnakeCase  // avatar_url
+    
+    
+    // zip
+    let getGoogleUser = getData(url: googleUrl)   // Observable<User>
+      .compactMap { (data) -> User? in
+        try? decoder.decode(User.self, from: data)
+      }
+    
+    let getAppleUser = getData(url: appleUrl)    // Observable<User>
+      .compactMap { (data) -> User? in
+        try? decoder.decode(User.self, from: data)
+      }
+    
+    _ = Observable.zip(getGoogleUser, getAppleUser) // Observable<(User, User)>
+      .compactMap { (google, apple) -> URL? in
+        if google.id > apple.id {
+          return URL(string: google.avatarUrl)
+        } else {
+          return URL(string: apple.avatarUrl)
+        }
+      }
+      .flatMap { (imageUrl) -> Observable<Data> in
         self.getData(url: imageUrl)
       }
       .compactMap { data -> UIImage? in
@@ -413,11 +455,9 @@ class ViewController: UIViewController {
     
     
     
+    
   }
-  
-  
-  
-  
+
   @IBAction func onCancel(_ sender: UIButton) {}
   
   override func viewDidLoad() {
