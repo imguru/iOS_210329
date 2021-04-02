@@ -139,7 +139,8 @@ class ViewController2: UIViewController {
 
   // Subject
   //  => 데이터를 저장할 수도 있고, 구독을 통해 데이터의 변경도 확인할 수 있습니다.
-  let errros = PublishSubject<Error>()
+  // let errros = PublishSubject<Error>()
+  let errors = PublishRelay<Error>()
   let items = PublishSubject<[User]>()
 
   override func viewDidLoad() {
@@ -199,7 +200,7 @@ class ViewController2: UIViewController {
     //  - subscribe(onNext: ..) -> drive(onNext: )
     //    bind(to: ...)         -> drive()
     // ------------------------
-    errros
+    errors
       .asDriver(onErrorJustReturn: NSError())
       .map { error -> String in
         error.localizedDescription
@@ -270,7 +271,8 @@ class ViewController2: UIViewController {
           let response = try decoder.decode(SearchUserResponse.self, from: data)
           return response
         } catch {
-          self.errros.onNext(error) // !!!
+          // self.errros.onNext(error) // !!! - Subject
+          self.errors.accept(error)    //     - Relay
           return nil
         }
 
