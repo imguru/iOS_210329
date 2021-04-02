@@ -147,6 +147,7 @@ class ViewController2: UIViewController {
     tableView.register(UITableViewCell.self, forCellReuseIdentifier: "MyCell") // Prototype Cell
 
     items.bind(to: tableView.rx.items(cellIdentifier: "MyCell")) { (index: Int, model: User, cell: UITableViewCell) in
+
       cell.textLabel?.text = model.login
       cell.detailTextLabel?.text = model.name
     }
@@ -187,9 +188,11 @@ class ViewController2: UIViewController {
 
         return self.searchUser(login: login)
       }
+      .observe(on: MainScheduler.instance)
       .subscribe(onNext: { [weak self] response in
         print(response.items.count)
         self?.items.onNext(response.items)
+        self?.errorLabel.text = "\(response.items.count) Items Searched"
         
       }, onError: { error in
         print("onError: \(error)")
