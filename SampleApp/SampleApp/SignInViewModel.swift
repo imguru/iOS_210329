@@ -1,7 +1,7 @@
 import Foundation
-import RxSwift
 // import RxCocoa
 import RxRelay
+import RxSwift
 
 // import RxCocoa
 // - MVC
@@ -11,7 +11,7 @@ import RxRelay
 // => 문제점: Controller가 너무 많은 역활을 담당한다.
 //          오직 UI 프레임워크에 대한 의존성이 없는 Model에 대해서만 단위 테스트 적용이 가능합니다.
 
-//-------------
+// -------------
 // View
 // ViewModel: UI 프레임워크에 대한 의존성이 존재하면 안됩니다.
 //            RxCocoa에 대한 의존성이 존재하면 안됩니다.
@@ -74,6 +74,4 @@ struct SignInViewModel {
         Observable.just(User(login: "test", id: 0, avatarUrl: "", name: nil, location: nil))
       }
   }
-  
-  
 }
