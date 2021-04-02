@@ -156,7 +156,9 @@ class ViewController2: UIViewController {
     // errors
     // let errros = PublishSubject<Error>()
     errros
-      .subscribe(onNext: { error in
+      .observe(on: MainScheduler.instance)
+      .subscribe(onNext: { [weak self] error in
+        self?.errorLabel.text = error.localizedDescription
         print(error.localizedDescription)
       })
       .disposed(by: disposeBag)
