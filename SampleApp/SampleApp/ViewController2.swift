@@ -136,8 +136,30 @@ class ViewController2: UIViewController {
   }
   #endif
 
+  // Subject
+  //  => 데이터를 저장할 수도 있고, 구독을 통해 데이터의 변경도 확인할 수 있습니다.
+
+  let errros = PublishSubject<Error>()
+
   override func viewDidLoad() {
     super.viewDidLoad()
+
+    // RxSwift
+    //  - 연산에서 예외가 발생할 경우 onError를 통해 알려준다.
+    //  - onError가 발생하면, 이벤트스트림은 종료됩니다.
+    //   => UI를 Rx를 통해 처리할 때, 오류가 발생하면, UI에 대한 이벤트 처리가 불가능합니다.
+    //     : 오류가 발생하지 않도록 만들어주어야 합니다.
+
+    //   onNext() ... -> onCompleted() -> X
+    //   onNext() ....-> onError() -> X
+
+    // errors
+    // let errros = PublishSubject<Error>()
+    errros
+      .subscribe(onNext: { error in
+        print(error.localizedDescription)
+      })
+      .disposed(by: disposeBag)
 
     searchBar.rx.text
       .compactMap { text -> String? in
@@ -146,15 +168,58 @@ class ViewController2: UIViewController {
         }
         return text.lowercased()
       }
-      .subscribe(onNext: { [weak self] text in
-        self?.errorLabel.text = text
-        print(text)
+      .flatMap { [weak self] (login: String) -> Observable<SearchUserResponse> in
+        guard let self = self else {
+          return .empty()
+        }
+
+        return self.searchUser(login: login)
+      }
+      .subscribe(onNext: { response in
+        print(response.items.count)
       }, onError: { error in
-        print("error - \(error)")
+        print("onError: \(error)")
       }, onCompleted: {
-        print("onComplete")
+        print("onCompleted")
       })
       .disposed(by: disposeBag)
+  }
+
+  func getUser(login: String) -> Observable<User> {
+    let url = URL(string: "https://api.github.com/users/\(login)")!
+
+    let decoder = JSONDecoder()
+    decoder.keyDecodingStrategy = .convertFromSnakeCase
+
+    return getData(url: url)
+      .compactMap { (data) -> User? in
+        try? decoder.decode(User.self, from: data)
+      }
+  }
+
+  func searchUser(login: String) -> Observable<SearchUserResponse> {
+    let url = URL(string: "https://api.github.com/search/users?q=\(login)")!
+
+    let decoder = JSONDecoder()
+    decoder.keyDecodingStrategy = .convertFromSnakeCase
+
+    return getData(url: url)
+      .compactMap { (data) -> SearchUserResponse? in
+        do {
+          let response = try decoder.decode(SearchUserResponse.self, from: data)
+          return response
+        } catch {
+          self.errros.onNext(error) // !!!
+          return nil
+        }
+
+        //      if let response = try? decoder.decode(SearchUserResponse.self, from: data) {
+        //        return response
+        //      } else {
+        //        print("Error!!!!")
+        //        return nil
+        //      }
+      }
   }
 }
 
@@ -173,30 +238,6 @@ struct SearchUserResponse: Decodable {
   let incompleteResults: Bool
   let items: [User]
 }
-
-func getUser(login: String) -> Observable<User> {
-  let url = URL(string: "https://api.github.com/users/\(login)")!
-
-  let decoder = JSONDecoder()
-  decoder.keyDecodingStrategy = .convertFromSnakeCase
-
-  return getData(url: url)
-    .compactMap { (data) -> User? in
-      try? decoder.decode(User.self, from: data)
-    }
-}
-
- func searchUser(login: String) -> Observable<SearchUserResponse> {
-  let url = URL(string: "https://api.github.com/search/users?q=\(login)")!
-
-  let decoder = JSONDecoder()
-  decoder.keyDecodingStrategy = .convertFromSnakeCase
-
-  return getData(url: url)
-    .compactMap { (data) -> SearchUserResponse? in
-      try? decoder.decode(SearchUserResponse.self, from: data)
-    }
- }
 
 func getData(url: URL) -> Observable<Data> {
   return Observable.create { observer -> Disposable in
