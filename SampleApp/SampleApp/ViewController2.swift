@@ -164,6 +164,7 @@ class ViewController2: UIViewController {
       .disposed(by: disposeBag)
 
     searchBar.rx.text
+      .throttle(.seconds(3), latest: true, scheduler: MainScheduler.instance)
       .compactMap { text -> String? in
         guard let text = text, text.count >= 3 else {
           return nil
@@ -171,6 +172,7 @@ class ViewController2: UIViewController {
         return text.lowercased()
       }
       .flatMap { [weak self] (login: String) -> Observable<SearchUserResponse> in
+        print("text")
         guard let self = self else {
           return .empty()
         }
