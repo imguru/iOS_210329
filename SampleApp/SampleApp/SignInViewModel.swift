@@ -1,5 +1,7 @@
 import Foundation
 import RxSwift
+// import RxCocoa
+import RxRelay
 
 // import RxCocoa
 // - MVC
@@ -16,8 +18,14 @@ import RxSwift
 //            => Driver(UI 스레드)
 // Model
 struct SignInViewModel {
-  let email = BehaviorSubject<String>(value: "")
-  let password = BehaviorSubject<String>(value: "")
+  // Subject vs Relay
+  //   - Subject는 .completed / .error의 이벤트 발생하면 이벤트 스트림이 종료됩니다.
+  
+  //   - Relay는 .complete / .error의 이벤트가 발생하지 않는다. => Driver
+  //     dispose가 호출되기 전까지 계속 수행된다.
+  
+  let email = BehaviorRelay<String>(value: "")
+  let password = BehaviorRelay<String>(value: "")
   
   let disposeBag = DisposeBag()
   
