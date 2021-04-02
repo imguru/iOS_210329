@@ -436,7 +436,7 @@ class ViewController: UIViewController {
     
     _ = Observable.zip(getGoogleUser, getAppleUser) // Observable<(User, User)>
       .compactMap { (google, apple) -> URL? in
-        if google.id > apple.id {
+        if google.id < apple.id {
           return URL(string: google.avatarUrl)
         } else {
           return URL(string: apple.avatarUrl)
