@@ -145,15 +145,14 @@ class ViewController2: UIViewController {
     super.viewDidLoad()
 
     tableView.register(UITableViewCell.self, forCellReuseIdentifier: "MyCell") // Prototype Cell
+    // let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "MyCell")
 
-    items.bind(to: tableView.rx.items(cellIdentifier: "MyCell")) { (index: Int, model: User, cell: UITableViewCell) in
-
+    items.bind(to: tableView.rx.items(cellIdentifier: "MyCell")) { (_: Int, model: User, cell: UITableViewCell) in
       cell.textLabel?.text = model.login
       cell.detailTextLabel?.text = model.name
     }
     .disposed(by: disposeBag)
-    
-    
+
     // RxSwift
     //  - 연산에서 예외가 발생할 경우 onError를 통해 알려준다.
     //  - onError가 발생하면, 이벤트스트림은 종료됩니다.
@@ -193,7 +192,7 @@ class ViewController2: UIViewController {
         print(response.items.count)
         self?.items.onNext(response.items)
         self?.errorLabel.text = "\(response.items.count) Items Searched"
-        
+
       }, onError: { error in
         print("onError: \(error)")
       }, onCompleted: {

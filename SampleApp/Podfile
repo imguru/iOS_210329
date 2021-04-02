@@ -8,5 +8,5 @@ target 'SampleApp' do
   # Pods for SampleApp
   pod 'RxSwift', '6.1.0'
   pod 'RxCocoa', '6.1.0'
-
+  pod 'Kingfisher', '~> 6.0'
 end
