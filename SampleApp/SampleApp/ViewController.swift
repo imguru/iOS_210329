@@ -310,6 +310,7 @@ class ViewController: UIViewController {
     }
   }
   
+  #if false
   @IBAction func onLoad(_ sender: UIButton) {
     _ = getData(url: IMAGE_URL)
       .compactMap { (data: Data) -> UIImage? in
@@ -372,6 +373,50 @@ class ViewController: UIViewController {
       }
     #endif
   }
+  #endif
+  
+  // https://api.github.com/users/apple  -> Data
+  //             map                     -> Data -> User
+  //         user.avatarUrl              -> URL
+  //           getData(url)              -> Data
+  //             map                     -> UIImage
+  //            onNext                   -> imageView.image = image
+  
+  struct User: Decodable {
+    let login: String
+    let avatarUrl: String
+  }
+  
+  @IBAction func onLoad(_ sender: UIButton) {
+    let userUrl = URL(string: "https://api.github.com/users/apple")!
+    
+    let decoder = JSONDecoder()
+    decoder.keyDecodingStrategy = .convertFromSnakeCase  // avatar_url
+    
+    _ = getData(url: userUrl)
+      .compactMap { data -> User? in                   // Observable<Data> -> Observable<User>
+        try? decoder.decode(User.self, from: data)
+      }
+      .compactMap { user -> URL? in                    // Observable<User> -> Observable<URL>
+        URL(string: user.avatarUrl)
+      }
+      .flatMap { (imageUrl) -> Observable<Data> in         // Observable<URL>  -> Observable<Observable<Data>> -> Observable<Data>
+        self.getData(url: imageUrl)
+      }
+      .compactMap { data -> UIImage? in
+        UIImage(data: data)
+      }
+      .observe(on: MainScheduler.instance)
+      .subscribe(onNext: { image in
+        self.imageView.image = image
+      })
+    
+    
+    
+  }
+  
+  
+  
   
   @IBAction func onCancel(_ sender: UIButton) {}
   
