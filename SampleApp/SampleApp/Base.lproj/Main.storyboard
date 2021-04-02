@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="UXp-gI-mi7">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Mb2-ev-kKy">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -98,6 +98,62 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gfx-fZ-GKQ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-3039" y="376"/>
+        </scene>
+        <!--View Controller3-->
+        <scene sceneID="RzE-wS-zZG">
+            <objects>
+                <viewController id="Mb2-ev-kKy" customClass="ViewController3" customModule="SampleApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="3vL-20-egm">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="X36-aO-ckN">
+                                <rect key="frame" x="16" y="515" width="343" height="136"/>
+                                <subviews>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="이메일" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Tqj-k5-2FL">
+                                        <rect key="frame" x="71.5" y="0.0" width="200" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="200" id="8iP-Ny-nXb"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="비밀번호" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="OVN-So-nF2">
+                                        <rect key="frame" x="71.5" y="48" width="200" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="200" id="m7j-He-ybj"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GQC-zu-dy8">
+                                        <rect key="frame" x="71.5" y="96" width="200" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="200" id="hV3-CT-RH4"/>
+                                            <constraint firstAttribute="height" constant="40" id="jXY-gX-Cy8"/>
+                                        </constraints>
+                                        <state key="normal" title="로그인"/>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Ji4-Ai-TD2"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Ji4-Ai-TD2" firstAttribute="trailing" secondItem="X36-aO-ckN" secondAttribute="trailing" constant="16" id="E2y-pq-kPr"/>
+                            <constraint firstItem="Ji4-Ai-TD2" firstAttribute="bottom" secondItem="X36-aO-ckN" secondAttribute="bottom" constant="16" id="LaC-Fp-EWe"/>
+                            <constraint firstItem="X36-aO-ckN" firstAttribute="leading" secondItem="Ji4-Ai-TD2" secondAttribute="leading" constant="16" id="dOr-zi-V05"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="emailField" destination="Tqj-k5-2FL" id="dMZ-kX-dEI"/>
+                        <outlet property="loginButton" destination="GQC-zu-dy8" id="KTR-1W-j4c"/>
+                        <outlet property="passwordField" destination="OVN-So-nF2" id="Sgt-P9-xz5"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fLJ-t1-y3s" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3039" y="1057"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="cBA-0A-qJh">
