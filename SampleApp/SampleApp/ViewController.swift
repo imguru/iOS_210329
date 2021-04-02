@@ -250,15 +250,21 @@ class ViewController: UIViewController {
       }
       
       task.resume()
-      return Disposables.create()
+      
+      // Disposable.dispose 되는 시점에 수행되는 블록
+      return Disposables.create {
+        print("취소")
+        task.cancel()
+      }
     }
   }
   
+  var disposable: Disposable? = nil
   @IBAction func onLoad(_ sender: UIButton) {
     let observable = loadImageFromURL(IMAGE_URL)
     
-    _ = observable
-      .observe(on: MainScheduler.instance)
+    disposable = observable
+      .observe(on: MainScheduler.instance)  // Main Thread
       .subscribe(onNext: { image in
         print("onNext: \(image)")
         
@@ -271,7 +277,9 @@ class ViewController: UIViewController {
       })
   }
   
-  @IBAction func onCancel(_ sender: UIButton) {}
+  @IBAction func onCancel(_ sender: UIButton) {
+    disposable?.dispose()
+  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
