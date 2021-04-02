@@ -1,6 +1,7 @@
 import RxCocoa
 import RxSwift
 import UIKit
+import Kingfisher
 
 // RxSwift
 //  - RxSwift
@@ -150,6 +151,7 @@ class ViewController2: UIViewController {
     items.bind(to: tableView.rx.items(cellIdentifier: "MyCell")) { (_: Int, model: User, cell: UITableViewCell) in
       cell.textLabel?.text = model.login
       cell.detailTextLabel?.text = model.name
+      cell.imageView?.kf.setImage(with: URL(string: model.avatarUrl))
     }
     .disposed(by: disposeBag)
 
