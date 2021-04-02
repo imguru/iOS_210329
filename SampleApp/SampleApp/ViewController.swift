@@ -1,4 +1,5 @@
 
+import RxSwift
 import UIKit
 
 let IMAGE_URL = URL(string: "https://picsum.photos/2048/2048")!
@@ -101,7 +102,6 @@ class ViewController: UIViewController {
    }
    */
   
-  
   // 3. 비동기 - URLSession - Task 기반 병렬 프로그래밍
   //   문제점: 비동기는 흐름 제어가 어렵습니다.
   //   해결방법
@@ -175,7 +175,6 @@ class ViewController: UIViewController {
     }
   }
   
-  
   @IBAction func onCancel(_ sender: UIButton) {
     currentTask?.cancel()
   }
@@ -189,14 +188,12 @@ class ViewController: UIViewController {
   //  => 비동기 이벤트를 컬렉션을 다루는 일반 적인 방법처럼 처리할 수 있습니다.
   
   //    Sequence     <------>    Iterator Protocol
-  //-----------------------------------------------
+  // -----------------------------------------------
   //    Array<int>              func next() -> Element?    => pull
   //            map/filter/flatMap
   
-  
-  
   //   Observable    <------>    Observer
-  //-----------------------------------------------
+  // -----------------------------------------------
   //                            func onNext(Element)      => push
   //                            func onError(Error)
   //                            func onComplete()
@@ -227,15 +224,39 @@ class ViewController: UIViewController {
   //     Observable에서 만드는 이벤트 스트림과 그에 필요한 리소스를 관리합니다.
   //     더 이상 이벤트를 필요로 하지 않는 경우, 해당 객체를 통해 구독을 취소할 수 있습니다.
 
-  
-  @IBAction func onLoad(_ sender: UIButton) {
-    
+  // UIImage
+  // (completion: @escaping (UIImage?, Error?) -> Void) => Observable<UIImage>
+  func loadImageFromURL(_ url: URL) -> Observable<UIImage> {
+    return Observable.create { observer -> Disposable in
+      
+      let task = URLSession.shared.dataTask(with: url) { data, _, error in
+        if let error = error {
+          observer.onError(error)
+          return
+        }
+        
+        guard let data = data else {
+          observer.onError(NSError(domain: "Invalid data(null)", code: 100, userInfo: [:]))
+          return
+        }
+        
+        guard let image = UIImage(data: data) else {
+          observer.onError(NSError(domain: "Invalid data", code: 101, userInfo: [:]))
+          return
+        }
+        
+        observer.onNext(image)
+        observer.onCompleted()
+      }
+      
+      task.resume()
+      return Disposables.create()
+    }
   }
   
-  @IBAction func onCancel(_ sender: UIButton) {
-    
-  }
+  @IBAction func onLoad(_ sender: UIButton) {}
   
+  @IBAction func onCancel(_ sender: UIButton) {}
   
   override func viewDidLoad() {
     super.viewDidLoad()
