@@ -23,6 +23,7 @@ class ViewController2: UIViewController {
   // dispose를 처리한다.
   var disposeBag = DisposeBag()
 
+  #if false
   override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -130,5 +131,72 @@ class ViewController2: UIViewController {
     super.viewWillDisappear(animated)
 
     // disposeBag = DisposeBag()
+  }
+  #endif
+
+  override func viewDidLoad() {
+    super.viewDidLoad()
+
+    searchBar.rx.text
+      .compactMap { text -> String? in
+        guard let text = text, text.count >= 3 else {
+          return nil
+        }
+        return text.lowercased()
+      }
+      .subscribe(onNext: { [weak self] text in
+        self?.errorLabel.text = text
+        print(text)
+      }, onError: { error in
+        print("error - \(error)")
+      }, onCompleted: {
+        print("onComplete")
+      })
+      .disposed(by: disposeBag)
+    
+    
+  }
+}
+
+
+struct User: Decodable {
+  let login: String
+  let id: Int
+  let avatarUrl: String
+  let name: String?
+  let location: String?
+}
+
+// https://api.github.com/search/users?q=\(login)
+// func searchUser()
+struct SearchUserResponse: Decodable {
+  let totalCount: Int
+  let incompleteResults: Bool
+  let items: [User]
+}
+
+
+func getData(url: URL) -> Observable<Data> {
+  return Observable.create { observer -> Disposable in
+    
+    let task = URLSession.shared.dataTask(with: url) { data, _, error in
+      if let error = error {
+        observer.onError(error)
+        return
+      }
+      
+      guard let data = data else {
+        observer.onError(NSError(domain: "Invalid data(null)", code: 100, userInfo: [:]))
+        return
+      }
+      
+      observer.onNext(data)
+      observer.onCompleted()
+    }
+    
+    task.resume()
+    return Disposables.create {
+      task.cancel()
+    }
   }
 }
