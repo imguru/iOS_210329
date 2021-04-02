@@ -258,8 +258,12 @@ class ViewController: UIViewController {
     let observable = loadImageFromURL(IMAGE_URL)
     
     _ = observable
+      .observe(on: MainScheduler.instance)
       .subscribe(onNext: { image in
         print("onNext: \(image)")
+        
+        self.imageView.image = image
+        
       }, onError: { error in
         print("onError: \(error)")
       }, onCompleted: {
