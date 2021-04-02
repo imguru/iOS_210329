@@ -29,6 +29,7 @@ class ViewController3: UIViewController {
   let email = BehaviorSubject<String>(value: "")
   let password = BehaviorSubject<String>(value: "")
   
+  // Data Binding
   override func viewDidLoad() {
     super.viewDidLoad()
     
