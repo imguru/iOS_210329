@@ -99,11 +99,9 @@ class ViewController: UIViewController {
        }
      }
    }
-  
-  
    */
   
-  // 3. 비동기 - URLSession
+  // 3. 비동기 - URLSession - Task 기반 병렬 프로그래밍
   //   문제점: 비동기는 흐름 제어가 어렵습니다.
   //   해결방법
   //    => http://reactivex.io/

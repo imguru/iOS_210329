@@ -21,6 +21,7 @@ struct PCGame: Game {
   }
 }
 
+// compile error!
 let numberOfPlayers: [Game: Int] = [
   VideoGame(): 40,
   PCGame(): 100,
