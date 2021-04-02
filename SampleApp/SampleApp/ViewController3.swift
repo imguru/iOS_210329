@@ -3,6 +3,7 @@ import RxCocoa
 import RxSwift
 import UIKit
 
+#if false
 struct SignInViewModel {
   let email = BehaviorSubject<String>(value: "")
   let password = BehaviorSubject<String>(value: "")
@@ -46,7 +47,9 @@ struct SignInViewModel {
     return Observable.merge([keyboardWillShowNotification, keyboardWillHideNotification])
   }()
 }
+#endif
 
+// MVVM(Model - View - ViewModel)
 class ViewController3: UIViewController {
   @IBOutlet var emailField: UITextField!
   @IBOutlet var passwordField: UITextField!
@@ -76,6 +79,7 @@ class ViewController3: UIViewController {
   
     // viewModel.isLoginButtonEnabled -> loginButton.isEnabled
     viewModel.isLoginButtonEnabled
+      .asDriver(onErrorJustReturn: false)
       .drive(loginButton.rx.isEnabled)
       .disposed(by: viewModel.disposeBag)
     
