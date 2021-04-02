@@ -30,6 +30,8 @@ class ViewController3: UIViewController {
   let password = BehaviorSubject<String>(value: "")
   
   // Data Binding
+  // 1. Observable
+  #if false
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -63,9 +65,88 @@ class ViewController3: UIViewController {
     isLoginButtonEnabled.subscribe(onNext: { b in
       self.loginButton.isEnabled = b
     })
-    .disposed(by: disposeBag)
+      .disposed(by: disposeBag)
     
+    keyboardHeight()
+      .map { $0 + 16 }
+      .bind(to: bottomMargin.rx.constant)
+      .disposed(by: disposeBag)
     
+    /*
+     keyboardHeight()
+       .subscribe(onNext: { [weak self] height in
+         self?.bottomMargin.constant = 16 + height
+       })
+       .disposed(by: disposeBag)
+     */
+      
+    #if false
+    // Do any additional setup after loading the view.
+    NotificationCenter.default.rx.notification(UIResponder.keyboardWillShowNotification)
+      .subscribe(onNext: { [weak self] notifiction in
+        
+        if let height = (notifiction.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height {
+          print("keyboardWillShowNotification: \(height)")
+          
+          self?.bottomMargin.constant = 16 + height
+        }
+        
+      })
+      .disposed(by: disposeBag)
+      
+    NotificationCenter.default.rx.notification(UIResponder.keyboardWillHideNotification)
+      .subscribe(onNext: { [weak self] _ in
+        print("keyboardWillHideNotification")
+        
+        self?.bottomMargin.constant = 16
+        
+      })
+      .disposed(by: disposeBag)
+    #endif
+  }
+  #endif
+
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    
+    // emailField.text -> email
+    emailField.rx.text
+      .asDriver()
+      .compactMap { $0 }
+      .drive(email)
+      .disposed(by: disposeBag)
+    
+    // passwordField.text -> password
+    passwordField.rx.text
+      .asDriver()
+      .compactMap { $0 }
+      .drive(password)
+      .disposed(by: disposeBag)
+    
+    let emailIsValid = email
+      .asDriver(onErrorJustReturn: "")
+      .map { email -> Bool in
+        email.count >= 5 && email.contains("@")
+      }
+    
+    let passwordIsValid = password
+      .asDriver(onErrorJustReturn: "")
+      .map { password -> Bool in
+        password.count >= 6
+      }
+    
+    let isLoginButtonEnabled = Driver.combineLatest(emailIsValid, passwordIsValid)
+      .map { (emailIsValid, passwordIsValid) -> Bool in
+        emailIsValid && passwordIsValid
+      }
+
+    isLoginButtonEnabled.drive(loginButton.rx.isEnabled)
+      .disposed(by: disposeBag)
+
+//    isLoginButtonEnabled.drive(onNext: { b in
+//      self.loginButton.isEnabled = b
+//    })
+//    .disposed(by: disposeBag)
     
     keyboardHeight()
       .map { $0 + 16 }
