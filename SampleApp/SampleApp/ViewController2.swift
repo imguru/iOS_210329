@@ -138,12 +138,21 @@ class ViewController2: UIViewController {
 
   // Subject
   //  => 데이터를 저장할 수도 있고, 구독을 통해 데이터의 변경도 확인할 수 있습니다.
-
   let errros = PublishSubject<Error>()
+  let items = PublishSubject<[User]>()
 
   override func viewDidLoad() {
     super.viewDidLoad()
 
+    tableView.register(UITableViewCell.self, forCellReuseIdentifier: "MyCell") // Prototype Cell
+
+    items.bind(to: tableView.rx.items(cellIdentifier: "MyCell")) { (index: Int, model: User, cell: UITableViewCell) in
+      cell.textLabel?.text = model.login
+      cell.detailTextLabel?.text = model.name
+    }
+    .disposed(by: disposeBag)
+    
+    
     // RxSwift
     //  - 연산에서 예외가 발생할 경우 onError를 통해 알려준다.
     //  - onError가 발생하면, 이벤트스트림은 종료됩니다.
@@ -164,23 +173,24 @@ class ViewController2: UIViewController {
       .disposed(by: disposeBag)
 
     searchBar.rx.text
-      .throttle(.seconds(3), latest: true, scheduler: MainScheduler.instance)
+      .throttle(.seconds(2), latest: true, scheduler: MainScheduler.instance)
       .compactMap { text -> String? in
         guard let text = text, text.count >= 3 else {
           return nil
         }
         return text.lowercased()
       }
-      .flatMap { [weak self] (login: String) -> Observable<SearchUserResponse> in
-        print("text")
+      .flatMapLatest { [weak self] (login: String) -> Observable<SearchUserResponse> in
         guard let self = self else {
           return .empty()
         }
 
         return self.searchUser(login: login)
       }
-      .subscribe(onNext: { response in
+      .subscribe(onNext: { [weak self] response in
         print(response.items.count)
+        self?.items.onNext(response.items)
+        
       }, onError: { error in
         print("onError: \(error)")
       }, onCompleted: {
